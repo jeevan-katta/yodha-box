@@ -2,6 +2,9 @@
   "name": "vsy-box-cricket-pro-server",
   "version": "1.0.0",
   "description": "VSY Box Cricket Pro - Backend API Server",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",

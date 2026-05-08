@@ -1,3 +1,6 @@
+process.on('uncaughtException', err => console.log('🔥 UNCAUGHT EXCEPTION 🔥', err));
+process.on('unhandledRejection', reason => console.log('🔥 UNHANDLED REJECTION 🔥', reason));
+
 import express from 'express'; // Force restart
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
