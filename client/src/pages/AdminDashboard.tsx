@@ -640,12 +640,15 @@ const AdminDashboard: React.FC = () => {
                     { label: 'Total Bookings', value: stats.totalBookings ?? 0, icon: <MdCheckCircle size={24} />, color: 'primary', sub: 'Across all time' },
                     { label: 'Turf A Income', value: (stats.revenueByTurf ?? []).find(t => t._id === 'A')?.total ?? 0, icon: <MdSportsCricket size={24} />, color: 'primary', sub: `${(stats.revenueByTurf ?? []).find(t => t._id === 'A')?.count ?? 0} Games` },
                     { label: 'Turf B Income', value: (stats.revenueByTurf ?? []).find(t => t._id === 'B')?.total ?? 0, icon: <MdSportsCricket size={24} />, color: 'accent', sub: `${(stats.revenueByTurf ?? []).find(t => t._id === 'B')?.count ?? 0} Games` },
+                    { label: 'Ball Revenue', value: stats.totalBallRevenue ?? 0, icon: <MdAttachMoney size={24} />, color: 'amber', sub: 'Equipment' },
                   ].map((stat, idx) => (
                     <div key={idx} className={`group relative overflow-hidden rounded-3xl p-6 border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300`}>
                       <div className="relative z-10 flex flex-col gap-4">
-                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${stat.color === 'primary' ? 'bg-primary-500/20 text-primary-400' :
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${
+                          stat.color === 'primary' ? 'bg-primary-500/20 text-primary-400' :
                           stat.color === 'accent' ? 'bg-accent-500/20 text-accent-400' :
-                            stat.color === 'purple' ? 'bg-purple-500/20 text-purple-400' : 'bg-white/10'
+                          stat.color === 'amber' ? 'bg-amber-500/20 text-amber-400' :
+                          stat.color === 'purple' ? 'bg-purple-500/20 text-purple-400' : 'bg-white/10'
                           }`}>
                           {stat.icon}
                         </div>

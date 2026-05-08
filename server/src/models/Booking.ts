@@ -58,6 +58,16 @@ const bookingSchema = new Schema<BookingDocument>(
       type: String,
       default: '',
     },
+    ballType: {
+      type: String,
+      enum: ['light_tennis', 'hard_tennis', 'old_ball', 'none'],
+      default: 'light_tennis',
+    },
+    ballAmount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
   },
   {
     timestamps: true,

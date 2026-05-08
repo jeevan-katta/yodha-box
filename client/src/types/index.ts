@@ -38,6 +38,8 @@ export interface Booking {
   status: BookingStatus;
   razorpayOrderId: string;
   razorpayPaymentId?: string;
+  ballType?: string;
+  ballAmount?: number;
   createdAt: string;
   updatedAt: string;
   isBlocked?: boolean; // For manual admin blocks
@@ -82,6 +84,7 @@ export interface DashboardStats {
   todayBlocked: number;
   todayOccupancy: number;
   revenueByTurf: Array<{ _id: TurfId; total: number; count: number }>;
+  totalBallRevenue: number;
   recentBookings: Booking[];
   upcomingBookings: Booking[];
 }

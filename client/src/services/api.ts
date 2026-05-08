@@ -91,12 +91,13 @@ export const getPublicPricing = async () => {
 };
 
 // ===== BOOKINGS =====
-export const createBooking = async (turfId: TurfId, date: string, startHours: number[], paymentType: 'full' | 'advance' = 'full') => {
+export const createBooking = async (turfId: TurfId, date: string, startHours: number[], paymentType: 'full' | 'advance' = 'full', ballType: string = 'light_tennis') => {
   const res = await api.post<ApiResponse<CreateOrderResponse>>('/bookings/create', { 
     turfId, 
     date, 
     startHours,
-    paymentType
+    paymentType,
+    ballType
   });
   return res.data;
 };

@@ -31,6 +31,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
   const [step, setStep] = useState<BookingStep>('confirm');
   const [countdown, setCountdown] = useState(300);
   const [paymentType, setPaymentType] = useState<'full' | 'advance'>('full');
+  const [ballType, setBallType] = useState<'light_tennis' | 'hard_tennis' | 'old_ball'>('light_tennis');
   const [demoOrder, setDemoOrder] = useState<any>(null);
 
   const resetAndClose = () => {
@@ -38,6 +39,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
     setCountdown(300);
     setDemoOrder(null);
     setPaymentType('full');
+    setBallType('light_tennis');
     onClose();
   };
 
@@ -71,7 +73,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
 
       // Create booking order for ALL selected hours with selected payment type
       const selectedHours = selectedSlots.map(s => s.hour);
-      const orderRes = await createBooking(turfId, date, selectedHours, paymentType);
+      const orderRes = await createBooking(turfId, date, selectedHours, paymentType, ballType);
       
       if (!orderRes.success || !orderRes.data) {
         clearInterval(timer);
@@ -101,7 +103,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
         amount: orderData.amount * 100,
         currency: orderData.currency,
         name: 'VSY Box Cricket Pro',
-        description: `Turf ${turfId} | ${formatDate(date)} | ${selectedSlots.length} Slots (${paymentType})`,
+        description: `Turf ${turfId} | ${formatDate(date)} | ${selectedSlots.length} Slots + ${ballType.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} (${paymentType})`,
         order_id: orderData.orderId,
         handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
           clearInterval(timer);
@@ -193,7 +195,16 @@ const BookingModal: React.FC<BookingModalProps> = ({
 
   if (selectedSlots.length === 0) return null;
 
-  const totalAmount = selectedSlots.reduce((sum, s) => sum + s.price, 0);
+  const BALL_PRICES = {
+    light_tennis: 80,
+    hard_tennis: 100,
+    old_ball: 0,
+    none: 0,
+  };
+  
+  const slotsAmount = selectedSlots.reduce((sum, s) => sum + s.price, 0);
+  const ballAmount = BALL_PRICES[ballType];
+  const totalAmount = slotsAmount + ballAmount;
   const advanceAmount = Math.round(totalAmount * 0.3);
   const payableNow = paymentType === 'advance' ? advanceAmount : totalAmount;
 
@@ -233,6 +244,32 @@ const BookingModal: React.FC<BookingModalProps> = ({
                     <MdAccessTime className="text-primary-400" size={16} />
                     <span className="text-sm text-primary-100 font-bold">{slot.timeLabel}</span>
                   </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Ball Type Selection */}
+            <div className="space-y-3">
+              <p className="text-[10px] text-surface-400 font-bold uppercase tracking-widest">Select Ball</p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { id: 'light_tennis', label: 'Light Tennis', price: 80, desc: 'New ball' },
+                  { id: 'hard_tennis', label: 'Hard Tennis', price: 100, desc: 'New ball' },
+                  { id: 'old_ball', label: 'Old Ball', price: 0, desc: 'If available' },
+                ].map((ball) => (
+                  <button
+                    key={ball.id}
+                    onClick={() => setBallType(ball.id as any)}
+                    className={`flex flex-col items-center p-2 rounded-xl border transition-all ${
+                      ballType === ball.id
+                        ? 'bg-primary-500/20 border-primary-500 ring-1 ring-primary-500/30'
+                        : 'bg-white/5 border-white/10 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="text-[11px] font-black text-white uppercase text-center mb-1 leading-tight">{ball.label}</span>
+                    <span className="text-sm font-black text-white">{ball.price > 0 ? `₹${ball.price}` : 'Free'}</span>
+                    <span className="text-[9px] text-surface-400 uppercase tracking-tighter mt-1 text-center">{ball.desc}</span>
+                  </button>
                 ))}
               </div>
             </div>

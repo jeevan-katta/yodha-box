@@ -336,11 +336,15 @@ export const getDashboardStats = async (req: Request, res: Response): Promise<vo
       ]),
       Booking.aggregate([
         { $match: { status: 'confirmed', ...dateFilter } },
-        { $group: { _id: '$turfId', total: { $sum: '$totalAmount' }, count: { $sum: 1 } } }
+        { $group: { _id: '$turfId', total: { $sum: { $subtract: ['$totalAmount', '$ballAmount'] } }, count: { $sum: 1 } } }
+      ]),
+      Booking.aggregate([
+        { $match: { status: 'confirmed', ...dateFilter } },
+        { $group: { _id: null, totalBall: { $sum: '$ballAmount' } } }
       ])
     ]);
 
-    const [totalBookings, confirmedBookings, todayBookings, totalUsers, totalBlocked, todayBlocked, revenueResult, turfRevenueResult] = statsResult;
+    const [totalBookings, confirmedBookings, todayBookings, totalUsers, totalBlocked, todayBlocked, revenueResult, turfRevenueResult, ballRevenueResult] = statsResult;
 
     // Parse revenue and counts result
     let onlineRevenue = 0;
@@ -391,6 +395,7 @@ export const getDashboardStats = async (req: Request, res: Response): Promise<vo
         onlineCount,
         walkinCount,
         revenueByTurf: turfRevenueResult,
+        totalBallRevenue: ballRevenueResult[0]?.totalBall || 0,
         recentBookings,
         upcomingBookings,
         totalBlocked,

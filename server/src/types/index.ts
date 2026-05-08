@@ -35,6 +35,8 @@ export interface IBooking {
   razorpayOrderId: string;
   razorpayPaymentId?: string;
   razorpaySignature?: string;
+  ballType: string;
+  ballAmount: number;
   createdAt: Date;
   updatedAt: Date;
 }

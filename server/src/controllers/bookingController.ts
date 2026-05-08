@@ -14,7 +14,7 @@ import mongoose from 'mongoose';
  */
 export const createBooking = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { turfId, date, startHours, paymentType = 'full' } = req.body;
+    const { turfId, date, startHours, paymentType = 'full', ballType = 'light_tennis' } = req.body;
     const userId = req.userId;
 
     if (!userId) {
@@ -39,7 +39,15 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    let totalBookingAmount = 0;
+    const BALL_PRICES: Record<string, number> = {
+      light_tennis: 80,
+      hard_tennis: 100,
+      old_ball: 0,
+      none: 0
+    };
+    const ballAmount = BALL_PRICES[ballType] || 0;
+
+    let totalBookingAmount = ballAmount;
     const bookingsData = [];
 
     // Verify locks and availability for all slots
@@ -73,6 +81,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
 
     // Calculate amount to pay now
     const amountToPay = paymentType === 'advance' ? Math.round(totalBookingAmount * 0.3) : totalBookingAmount;
+    console.log('--- DEBUG ---', { ballType, ballAmount, totalBookingAmount, bookingsData });
 
     // Create Razorpay order for the amount to pay
     // Shorten bookingRef to stay under Razorpay's 40-char limit for receipt
@@ -81,20 +90,28 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
 
     // Create multiple pending bookings
     const bookings = await Promise.all(
-      bookingsData.map(async (data) => {
+      bookingsData.map(async (data, index) => {
+        // Add the ball cost to the first booking only to avoid duplication and fractions
+        const isFirstBooking = index === 0;
+        const currentBallAmount = isFirstBooking ? ballAmount : 0;
+        const currentBallType = isFirstBooking ? ballType : 'none';
+        
+        const slotPrice = data.price + currentBallAmount;
         // For individual records, we split the paid amount proportionally
-        const individualPaidAmount = paymentType === 'advance' ? Math.round(data.price * 0.3) : data.price;
+        const individualPaidAmount = paymentType === 'advance' ? Math.round(slotPrice * 0.3) : slotPrice;
 
         return await Booking.create({
           userId: new mongoose.Types.ObjectId(userId),
           turfId,
           date,
           startHour: data.hour,
-          totalAmount: data.price,
+          totalAmount: slotPrice,
           paidAmount: individualPaidAmount,
           paymentType,
           status: 'pending',
           razorpayOrderId: order.orderId,
+          ballType: currentBallType,
+          ballAmount: currentBallAmount,
         });
       })
     );
