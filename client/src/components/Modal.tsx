@@ -21,8 +21,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidt
       />
 
       {/* Modal */}
-      <div className={`relative ${maxWidth} w-full glass-card p-6 animate-scale-in`}>
-        <div className="flex items-center justify-between mb-4">
+      <div className={`relative flex flex-col ${maxWidth} w-full max-h-[95vh] sm:max-h-[90vh] glass-card animate-scale-in overflow-hidden`}>
+        {/* Header */}
+        <div className="flex-none flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-surface-900/50 backdrop-blur-md">
           <h3 className="text-lg font-display font-bold text-white">{title}</h3>
           <button
             onClick={onClose}
@@ -31,7 +32,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidt
             <MdClose size={18} />
           </button>
         </div>
-        {children}
+        
+        {/* Scrollable Body */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar">
+          {children}
+        </div>
       </div>
     </div>
   );

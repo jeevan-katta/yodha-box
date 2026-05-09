@@ -219,125 +219,125 @@ const BookingModal: React.FC<BookingModalProps> = ({
       {step === 'confirm' && (
         <div className="space-y-4 animate-fade-in">
           {/* Booking Details Card */}
-          <div className="bg-white/5 rounded-2xl p-6 border border-white/10 space-y-6">
-            <div className="flex items-center justify-between border-b border-white/5 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary-500/20 flex items-center justify-center">
-                  <MdSportsCricket className="text-primary-400" size={24} />
+          <div className="bg-white/5 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/10 space-y-4 sm:space-y-6">
+            <div className="flex items-center justify-between border-b border-white/5 pb-3 sm:pb-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-primary-500/20 flex items-center justify-center">
+                  <MdSportsCricket className="text-primary-400 text-lg sm:text-2xl" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-surface-400 font-bold uppercase tracking-widest">Selected Facility</p>
-                  <p className="text-white font-black text-lg">Turf {turfId}</p>
+                  <p className="text-[9px] sm:text-[10px] text-surface-400 font-bold uppercase tracking-widest">Selected Facility</p>
+                  <p className="text-white font-black text-base sm:text-lg leading-tight">Turf {turfId}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-[10px] text-surface-400 font-bold uppercase tracking-widest">Match Date</p>
-                <p className="text-white font-black text-lg">{formatDate(date)}</p>
+                <p className="text-[9px] sm:text-[10px] text-surface-400 font-bold uppercase tracking-widest">Match Date</p>
+                <p className="text-white font-black text-base sm:text-lg leading-tight">{formatDate(date)}</p>
               </div>
             </div>
 
-            <div className="space-y-3">
-              <p className="text-[10px] text-surface-400 font-bold uppercase tracking-widest">Selected Time Slots ({selectedSlots.length})</p>
-              <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-2 sm:space-y-3">
+              <p className="text-[9px] sm:text-[10px] text-surface-400 font-bold uppercase tracking-widest">Selected Time Slots ({selectedSlots.length})</p>
+              <div className="grid grid-cols-2 gap-2 max-h-32 sm:max-h-40 overflow-y-auto pr-2 custom-scrollbar">
                 {selectedSlots.map(slot => (
-                  <div key={slot.hour} className="flex items-center gap-2 bg-primary-500/10 px-3 py-2.5 rounded-xl border border-primary-500/20">
-                    <MdAccessTime className="text-primary-400" size={16} />
-                    <span className="text-sm text-primary-100 font-bold">{slot.timeLabel}</span>
+                  <div key={slot.hour} className="flex items-center gap-1.5 sm:gap-2 bg-primary-500/10 px-2 sm:px-3 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-primary-500/20">
+                    <MdAccessTime className="text-primary-400 text-sm sm:text-base" />
+                    <span className="text-xs sm:text-sm text-primary-100 font-bold truncate">{slot.timeLabel}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Ball Type Selection */}
-            <div className="space-y-3">
-              <p className="text-[10px] text-surface-400 font-bold uppercase tracking-widest">Select Ball</p>
+            <div className="space-y-2 sm:space-y-3">
+              <p className="text-[9px] sm:text-[10px] text-surface-400 font-bold uppercase tracking-widest">Select Ball</p>
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { id: 'light_tennis', label: 'Light Tennis', price: 80, desc: 'New ball' },
-                  { id: 'hard_tennis', label: 'Hard Tennis', price: 100, desc: 'New ball' },
-                  { id: 'old_ball', label: 'Old Ball', price: 0, desc: 'If available' },
+                  { id: 'light_tennis', label: 'Light', price: 80, desc: 'Tennis' },
+                  { id: 'hard_tennis', label: 'Hard', price: 100, desc: 'Tennis' },
+                  { id: 'old_ball', label: 'Old', price: 0, desc: 'Free' },
                 ].map((ball) => (
                   <button
                     key={ball.id}
                     onClick={() => setBallType(ball.id as any)}
-                    className={`flex flex-col items-center p-2 rounded-xl border transition-all ${
+                    className={`flex flex-col items-center p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition-all ${
                       ballType === ball.id
                         ? 'bg-primary-500/20 border-primary-500 ring-1 ring-primary-500/30'
                         : 'bg-white/5 border-white/10 hover:bg-white/10'
                     }`}
                   >
-                    <span className="text-[11px] font-black text-white uppercase text-center mb-1 leading-tight">{ball.label}</span>
-                    <span className="text-sm font-black text-white">{ball.price > 0 ? `₹${ball.price}` : 'Free'}</span>
-                    <span className="text-[9px] text-surface-400 uppercase tracking-tighter mt-1 text-center">{ball.desc}</span>
+                    <span className="text-[10px] sm:text-[11px] font-black text-white uppercase text-center mb-0.5 leading-tight">{ball.label}</span>
+                    <span className="text-xs sm:text-sm font-black text-white">{ball.price > 0 ? `₹${ball.price}` : 'Free'}</span>
+                    <span className="text-[8px] sm:text-[9px] text-surface-400 uppercase tracking-tighter mt-0.5 text-center truncate w-full">{ball.desc}</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Payment Option Selection */}
-            <div className="space-y-3">
-              <p className="text-[10px] text-surface-400 font-bold uppercase tracking-widest">Select Payment Option</p>
-              <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2 sm:space-y-3">
+              <p className="text-[9px] sm:text-[10px] text-surface-400 font-bold uppercase tracking-widest">Payment Option</p>
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 <button 
                   onClick={() => setPaymentType('full')}
-                  className={`flex flex-col items-center p-3 rounded-xl border transition-all ${
+                  className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg sm:rounded-xl border transition-all ${
                     paymentType === 'full' 
-                    ? 'bg-primary-500/20 border-primary-500 ring-2 ring-primary-500/30' 
+                    ? 'bg-primary-500/20 border-primary-500 ring-1 ring-primary-500/30' 
                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                   }`}
                 >
-                  <span className="text-xs font-black text-white uppercase mb-1">Full Payment</span>
-                  <span className="text-lg font-black text-white">₹{totalAmount}</span>
-                  <span className="text-[10px] text-surface-400 uppercase tracking-tighter mt-1">Pay 100% now</span>
+                  <span className="text-[10px] sm:text-xs font-black text-white uppercase mb-0.5 sm:mb-1">Full Payment</span>
+                  <span className="text-base sm:text-lg font-black text-white">₹{totalAmount}</span>
+                  <span className="text-[8px] sm:text-[10px] text-surface-400 uppercase tracking-tighter mt-0.5 sm:mt-1 truncate w-full text-center">Pay 100% now</span>
                 </button>
                 <button 
                   onClick={() => setPaymentType('advance')}
-                  className={`flex flex-col items-center p-3 rounded-xl border transition-all ${
+                  className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg sm:rounded-xl border transition-all ${
                     paymentType === 'advance' 
-                    ? 'bg-accent-500/20 border-accent-500 ring-2 ring-accent-500/30' 
+                    ? 'bg-accent-500/20 border-accent-500 ring-1 ring-accent-500/30' 
                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                   }`}
                 >
-                  <span className="text-xs font-black text-white uppercase mb-1">Advance (30%)</span>
-                  <span className="text-lg font-black text-white">₹{advanceAmount}</span>
-                  <span className="text-[10px] text-surface-400 uppercase tracking-tighter mt-1">Pay remaining at turf</span>
+                  <span className="text-[10px] sm:text-xs font-black text-white uppercase mb-0.5 sm:mb-1">Advance (30%)</span>
+                  <span className="text-base sm:text-lg font-black text-white">₹{advanceAmount}</span>
+                  <span className="text-[8px] sm:text-[10px] text-surface-400 uppercase tracking-tighter mt-0.5 sm:mt-1 truncate w-full text-center">Pay rest at turf</span>
                 </button>
               </div>
             </div>
 
-            <div className="pt-5 border-t border-white/10 flex items-end justify-between">
+            <div className="pt-3 sm:pt-4 border-t border-white/10 flex items-end justify-between">
               <div>
-                <p className="text-[10px] text-surface-400 font-bold uppercase tracking-widest mb-1">Payable Now</p>
-                <p className="text-white font-black text-3xl tracking-tight">
-                   <span className="text-primary-400">₹</span>{payableNow}
+                <p className="text-[9px] sm:text-[10px] text-surface-400 font-bold uppercase tracking-widest mb-0.5 sm:mb-1">Payable Now</p>
+                <p className="text-white font-black text-2xl sm:text-3xl tracking-tight leading-none">
+                   <span className="text-primary-400 mr-0.5">₹</span>{payableNow}
                 </p>
               </div>
               <div className="flex flex-col items-end">
-                 <span className="text-[10px] text-surface-500 font-bold uppercase mb-1">
+                 <span className="text-[8px] sm:text-[10px] text-surface-500 font-bold uppercase mb-1">
                    {paymentType === 'full' ? 'Payment in Full' : `Balance: ₹${totalAmount - advanceAmount}`}
                  </span>
-                 <div className="bg-green-500/20 text-green-400 text-[10px] font-black px-3 py-1 rounded-full border border-green-500/30 uppercase tracking-tighter">
-                   Best Price Guaranteed
+                 <div className="bg-green-500/20 text-green-400 text-[8px] sm:text-[9px] font-black px-2 py-0.5 sm:px-3 sm:py-1 rounded-full border border-green-500/30 uppercase tracking-tighter">
+                   Best Price Guarantee
                  </div>
               </div>
             </div>
           </div>
 
-          <div className="flex gap-3 pt-2">
-            <button onClick={resetAndClose} className="btn-secondary flex-1 py-4 font-black uppercase tracking-widest text-xs">
-              Change Selection
+          <div className="flex gap-2 sm:gap-3 pt-2">
+            <button onClick={resetAndClose} className="btn-secondary flex-1 py-3 sm:py-4 font-black uppercase tracking-widest text-[10px] sm:text-xs">
+              Change
             </button>
             <button 
               onClick={handleLockAndPay} 
               disabled={step !== 'confirm'}
-              className="btn-primary flex-1 py-4 font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary flex-[2] py-3 sm:py-4 font-black uppercase tracking-widest text-[10px] sm:text-xs shadow-xl shadow-primary-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {step === 'confirm' ? 'Confirm & Pay' : 'Processing...'}
             </button>
           </div>
           
-          <p className="text-center text-[10px] text-surface-500 font-medium">
-            Slots are held for 5 minutes once you click Confirm.
+          <p className="text-center text-[9px] sm:text-[10px] text-surface-500 font-medium pb-2 sm:pb-0">
+            Slots are held for 5 minutes once confirmed.
           </p>
         </div>
       )}
