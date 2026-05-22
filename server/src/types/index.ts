@@ -60,6 +60,7 @@ export interface IBlockedSlot {
   phoneNumber?: string;
   customerName?: string;
   blockedBy: mongoose.Types.ObjectId;
+  groupId?: string;
   createdAt: Date;
 }
 

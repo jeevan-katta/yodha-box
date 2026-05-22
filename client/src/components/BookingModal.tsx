@@ -31,7 +31,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
   const [step, setStep] = useState<BookingStep>('confirm');
   const [countdown, setCountdown] = useState(300);
   const [paymentType, setPaymentType] = useState<'full' | 'advance'>('full');
-  const [ballType, setBallType] = useState<'light_tennis' | 'hard_tennis' | 'old_ball'>('light_tennis');
+  const [ballType, setBallType] = useState<'light_tennis' | 'hard_tennis' | 'old_ball' | 'none'>('none');
   const [demoOrder, setDemoOrder] = useState<any>(null);
 
   const resetAndClose = () => {
@@ -39,7 +39,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
     setCountdown(300);
     setDemoOrder(null);
     setPaymentType('full');
-    setBallType('light_tennis');
+    setBallType('none');
     onClose();
   };
 
@@ -251,8 +251,9 @@ const BookingModal: React.FC<BookingModalProps> = ({
             {/* Ball Type Selection */}
             <div className="space-y-2 sm:space-y-3">
               <p className="text-[9px] sm:text-[10px] text-surface-400 font-bold uppercase tracking-widest">Select Ball</p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 {[
+                  { id: 'none', label: 'None', price: 0, desc: 'N/A' },
                   { id: 'light_tennis', label: 'Light', price: 80, desc: 'Tennis' },
                   { id: 'hard_tennis', label: 'Hard', price: 100, desc: 'Tennis' },
                 ].map((ball) => (
@@ -266,7 +267,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                     }`}
                   >
                     <span className="text-[10px] sm:text-[11px] font-black text-white uppercase text-center mb-0.5 leading-tight">{ball.label}</span>
-                    <span className="text-xs sm:text-sm font-black text-white">{ball.price > 0 ? `₹${ball.price}` : 'Free'}</span>
+                    <span className="text-xs sm:text-sm font-black text-white">{ball.id === 'none' ? '—' : (ball.price > 0 ? `₹${ball.price}` : 'Free')}</span>
                     <span className="text-[8px] sm:text-[9px] text-surface-400 uppercase tracking-tighter mt-0.5 text-center truncate w-full">{ball.desc}</span>
                   </button>
                 ))}

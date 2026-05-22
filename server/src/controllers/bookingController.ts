@@ -14,7 +14,7 @@ import mongoose from 'mongoose';
  */
 export const createBooking = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { turfId, date, startHours, paymentType = 'full', ballType = 'light_tennis' } = req.body;
+    const { turfId, date, startHours, paymentType = 'full', ballType = 'none' } = req.body;
     const userId = req.userId;
 
     if (!userId) {
