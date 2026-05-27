@@ -1,11 +1,14 @@
 import { Router } from 'express';
-import { getSlots, lockSlotHandler, unlockSlotHandler, getPrice, getPublicPricing } from '../controllers/slotController';
+import { getSlots, lockSlotHandler, unlockSlotHandler, getPrice, getPublicPricing, getPublicBowlingPackages } from '../controllers/slotController';
 import { authMiddleware } from '../middleware/auth';
 
 const router = Router();
 
 // Public: get pricing summary
 router.get('/pricing', getPublicPricing);
+
+// Public: bowling package prices
+router.get('/bowling-packages', getPublicBowlingPackages);
 
 // Public: get slots for a turf on a date
 router.get('/:turfId/:date', getSlots);

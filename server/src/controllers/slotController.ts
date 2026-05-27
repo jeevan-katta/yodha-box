@@ -4,6 +4,7 @@ import { getSlotPrice } from '../services/pricingService';
 import { isValidDate, isValidHour, isFutureOrToday } from '../utils/helpers';
 import { TurfId } from '../types';
 import { PricingRule } from '../models/PricingRule';
+import { BowlingPackage } from '../models/BowlingPackage';
 
 /**
  * Get all slots for a specific turf and date.
@@ -12,8 +13,8 @@ export const getSlots = async (req: Request, res: Response): Promise<void> => {
   try {
     const { turfId, date } = req.params;
 
-    if (!turfId || !['A', 'B'].includes(turfId)) {
-      res.status(400).json({ success: false, message: 'Invalid turf ID. Must be A or B' });
+    if (!turfId || !['A', 'B', 'D'].includes(turfId)) {
+      res.status(400).json({ success: false, message: 'Invalid turf ID. Must be A, B or D' });
       return;
     }
 
@@ -52,7 +53,7 @@ export const lockSlotHandler = async (req: Request, res: Response): Promise<void
       return;
     }
 
-    if (!turfId || !['A', 'B'].includes(turfId)) {
+    if (!turfId || !['A', 'B', 'D'].includes(turfId)) {
       res.status(400).json({ success: false, message: 'Invalid turf ID' });
       return;
     }
@@ -162,5 +163,30 @@ export const getPublicPricing = async (_req: Request, res: Response): Promise<vo
     res.status(200).json({ success: true, data: rules });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to fetch pricing' });
+  }
+};
+
+/**
+ * Get bowling over packages (Public) — used by booking page.
+ */
+export const getPublicBowlingPackages = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    let packages = await BowlingPackage.find({ isActive: true }).sort({ overs: 1 });
+
+    // Auto-seed defaults if not yet in DB
+    if (packages.length === 0) {
+      const defaults = [
+        { overs: 5,  price: 250 },
+        { overs: 10, price: 450 },
+        { overs: 15, price: 600 },
+        { overs: 20, price: 750 },
+      ];
+      await BowlingPackage.insertMany(defaults);
+      packages = await BowlingPackage.find({ isActive: true }).sort({ overs: 1 });
+    }
+
+    res.status(200).json({ success: true, data: packages });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch bowling packages' });
   }
 };

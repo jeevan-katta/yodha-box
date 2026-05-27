@@ -66,12 +66,18 @@ const SlotGrid: React.FC<SlotGridProps> = ({ slots, turfId, selectedSlotHours, o
     <div>
       {/* Turf Header */}
       <div className="flex items-center gap-3 mb-4">
-        <div className={`w-3 h-3 rounded-full ${turfId === 'A' ? 'bg-primary-500' : 'bg-accent-500'}`} />
+        <div className={`w-3 h-3 rounded-full ${
+          turfId === 'A' ? 'bg-primary-500' : 
+          turfId === 'B' ? 'bg-accent-500' : 
+          turfId === 'D' ? 'bg-amber-500' : 'bg-white/30'
+        }`} />
         <h3 className="font-display font-bold text-lg text-white">
-          Arena {turfId === 'A' ? '1' : '2'}
+          {turfId === 'A' ? 'Arena 1' : 
+           turfId === 'B' ? 'Arena 2' : 
+           turfId === 'D' ? 'Open Ground' : turfId}
         </h3>
         <span className="text-xs text-surface-400 bg-white/5 px-2 py-1 rounded-full">
-          360° Box Cricket
+          {turfId === 'D' ? 'Spacious Playing Field' : '360° Box Cricket'}
         </span>
       </div>
 

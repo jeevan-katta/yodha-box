@@ -9,6 +9,7 @@ import type {
   Booking,
   DashboardStats,
   PricingRule,
+  BowlingPackage,
   BlockedSlotInfo,
   TurfId,
 } from '../types';
@@ -102,6 +103,18 @@ export const createBooking = async (turfId: TurfId, date: string, startHours: nu
   return res.data;
 };
 
+export const createBowlingBooking = async (date: string, startHour: number, overs: number) => {
+  const res = await api.post<ApiResponse<CreateOrderResponse>>('/bookings/create', {
+    turfId: 'C',
+    date,
+    startHours: [startHour],
+    paymentType: 'full',
+    ballType: 'none',
+    overs
+  });
+  return res.data;
+};
+
 export const verifyPayment = async (
   razorpayOrderId: string,
   razorpayPaymentId: string,
@@ -165,7 +178,8 @@ export const blockSlotAdmin = async (
   reason?: string,
   phoneNumber?: string,
   customerName?: string,
-  ballType?: string
+  ballType?: string,
+  overs?: number
 ) => {
   const res = await api.post<ApiResponse>('/admin/slots/block', { 
     turfId, 
@@ -174,7 +188,8 @@ export const blockSlotAdmin = async (
     reason,
     phoneNumber,
     customerName,
-    ballType
+    ballType,
+    overs
   });
   return res.data;
 };
@@ -203,5 +218,22 @@ export const updatePricingRule = async (ruleId: string, price: number, isActive:
 
 export const migrateWalkIns = async () => {
   const res = await api.post<ApiResponse>('/admin/migrate-walkins');
+  return res.data;
+};
+
+// ===== BOWLING PACKAGES (public) =====
+export const getPublicBowlingPackages = async () => {
+  const res = await api.get<ApiResponse<BowlingPackage[]>>('/slots/bowling-packages');
+  return res.data;
+};
+
+// ===== BOWLING PACKAGES (admin) =====
+export const getAdminBowlingPackages = async () => {
+  const res = await api.get<ApiResponse<BowlingPackage[]>>('/admin/bowling-packages');
+  return res.data;
+};
+
+export const updateBowlingPackage = async (packageId: string, price: number) => {
+  const res = await api.put<ApiResponse<BowlingPackage>>(`/admin/bowling-packages/${packageId}`, { price });
   return res.data;
 };

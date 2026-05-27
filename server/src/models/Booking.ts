@@ -12,7 +12,7 @@ const bookingSchema = new Schema<BookingDocument>(
     },
     turfId: {
       type: String,
-      enum: ['A', 'B'] as TurfId[],
+      enum: ['A', 'B', 'C', 'D'] as TurfId[],
       required: true,
     },
     date: {
@@ -64,6 +64,11 @@ const bookingSchema = new Schema<BookingDocument>(
       default: 'none',
     },
     ballAmount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    overs: {
       type: Number,
       default: 0,
       min: 0,

@@ -13,3 +13,11 @@ client/.env
 server/node_modules/
 server/dist/
 server/.env
+
+# Temporary scratch scripts
+*.js
+!client/**/*.js
+!server/src/**/*.js
+server/scratch_test.js
+server/test_login.js
+client/tsconfig.tsbuildinfo

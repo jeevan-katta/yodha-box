@@ -3,12 +3,16 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
+import HomePage from './pages/HomePage';
+import ActivitiesPage from './pages/ActivitiesPage';
+import BowlingBookingPage from './pages/BowlingBookingPage';
 import DashboardPage from './pages/DashboardPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import ProfilePage from './pages/ProfilePage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import LoadingSpinner from './components/LoadingSpinner';
+import BottomNavbar from './components/BottomNavbar';
 
 // Protected route for users
 const UserRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -62,10 +66,19 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   if (token) {
     if (role === 'admin') return <Navigate to="/admin" replace />;
-    if (role === 'user') return <Navigate to="/dashboard" replace />;
+    if (role === 'user') return <Navigate to="/activities" replace />;
   }
 
   return <>{children}</>;
+};
+
+// Router switch for home view
+const HomeRoute: React.FC = () => {
+  const { token, role } = useAuth();
+  if (token && role === 'user') {
+    return <HomePage />;
+  }
+  return <LoginPage />;
 };
 
 const App: React.FC = () => {
@@ -99,8 +112,8 @@ const App: React.FC = () => {
         />
 
         <Routes>
-          {/* Landing Page (Publicly accessible) */}
-          <Route path="/" element={<LoginPage />} />
+          {/* Landing / Home Page */}
+          <Route path="/" element={<HomeRoute />} />
           <Route
             path="/admin/login"
             element={
@@ -111,6 +124,22 @@ const App: React.FC = () => {
           />
 
           {/* User routes */}
+          <Route
+            path="/activities"
+            element={
+              <UserRoute>
+                <ActivitiesPage />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/dashboard/bowling"
+            element={
+              <UserRoute>
+                <BowlingBookingPage />
+              </UserRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={
@@ -149,6 +178,7 @@ const App: React.FC = () => {
           {/* Catch all */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <BottomNavbar />
       </BrowserRouter>
     </AuthProvider>
   );

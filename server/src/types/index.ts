@@ -17,7 +17,7 @@ export interface IAdmin {
   createdAt: Date;
 }
 
-export type TurfId = 'A' | 'B';
+export type TurfId = 'A' | 'B' | 'C' | 'D';
 
 export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'failed';
 export type PaymentType = 'full' | 'advance';
@@ -37,6 +37,7 @@ export interface IBooking {
   razorpaySignature?: string;
   ballType: string;
   ballAmount: number;
+  overs?: number;
   createdAt: Date;
   updatedAt: Date;
 }

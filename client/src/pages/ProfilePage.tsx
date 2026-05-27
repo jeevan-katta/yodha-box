@@ -55,7 +55,7 @@ const ProfilePage = () => {
     <div className="min-h-screen bg-surface-950 flex flex-col">
       <Navbar />
       
-      <main className="flex-1 pt-24 pb-12 px-4 sm:px-6 flex items-start justify-center max-w-7xl mx-auto w-full animate-fade-in">
+      <main className="flex-1 pt-24 pb-32 md:pb-12 px-4 sm:px-6 flex items-start justify-center max-w-7xl mx-auto w-full animate-fade-in">
         <div className="w-full max-w-2xl">
           
           <div className="mb-6">

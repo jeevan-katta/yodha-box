@@ -7,7 +7,7 @@ const pricingRuleSchema = new Schema<PricingRuleDocument>(
   {
     turfId: {
       type: String,
-      enum: ['A', 'B'],
+      enum: ['A', 'B', 'C', 'D'],
       required: true,
       default: 'A', // Fallback for existing documents without it
     },

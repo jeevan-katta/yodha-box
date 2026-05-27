@@ -151,7 +151,7 @@ const MyBookingsPage: React.FC = () => {
     <div className="min-h-screen bg-surface-950">
       <Navbar />
 
-      <main className="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      <main className="pt-20 pb-32 md:pb-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-8 animate-fade-in">
           <h1 className="text-3xl sm:text-4xl font-display font-black text-white">
@@ -247,17 +247,17 @@ const MyBookingsPage: React.FC = () => {
                     {/* Left: Arena 2randing */}
                     <div className="flex items-center gap-3 flex-1">
                       <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 relative overflow-hidden ${
-                        booking.turfId === 'A' ? 'bg-primary-500/10' : 'bg-accent-500/10'
+                        booking.turfId === 'A' ? 'bg-primary-500/10' : booking.turfId === 'B' ? 'bg-accent-500/10' : booking.turfId === 'C' ? 'bg-purple-500/10' : 'bg-emerald-500/10'
                       }`}>
-                        {/* Decorative background letter */}
+                        {/* Decorative background icon */}
                         <span className={`absolute -right-1 -bottom-2 text-3xl font-black opacity-10 select-none ${
-                        booking.turfId === 'A' ? 'text-primary-500' : 'text-accent-500'
-                      }`}>{booking.turfId}</span>
+                        booking.turfId === 'A' ? 'text-primary-500' : booking.turfId === 'B' ? 'text-accent-500' : booking.turfId === 'C' ? 'text-purple-500' : 'text-emerald-500'
+                      }`}>{booking.turfId === 'A' ? 'A1' : booking.turfId === 'B' ? 'A2' : booking.turfId === 'C' ? 'BM' : 'OG'}</span>
                         
-                        <span className={`relative font-display font-black text-xl ${
-                          booking.turfId === 'A' ? 'text-primary-400' : 'text-accent-400'
+                        <span className={`relative font-display font-black text-xs text-center leading-tight ${
+                          booking.turfId === 'A' ? 'text-primary-400' : booking.turfId === 'B' ? 'text-accent-400' : booking.turfId === 'C' ? 'text-purple-400' : 'text-emerald-400'
                         }`}>
-                          {booking.turfId}
+                          {booking.turfId === 'A' ? <>{`Arena`}<br/>{`1`}</> : booking.turfId === 'B' ? <>{`Arena`}<br/>{`2`}</> : booking.turfId === 'C' ? 'Bowling' : <>{`Open`}<br/>{`Ground`}</>}
                         </span>
                       </div>
 
@@ -279,11 +279,18 @@ const MyBookingsPage: React.FC = () => {
                         </h4>
                         
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-0.5 text-xs font-medium text-surface-400">
-                           <span className="flex items-center gap-1.5">
-                              <MdAccessTime size={14} className="text-primary-400/70" />
-                              {booking.startHours?.length > 1 ? `${booking.startHours.length} Slots: ` : ''}
-                              <span className="text-surface-200 font-bold">{formatHour(booking.startHours[0])} - {formatHour(booking.endHour)}</span>
-                           </span>
+                           {booking.turfId === 'C' && booking.overs ? (
+                             <span className="flex items-center gap-1.5">
+                               <MdSportsCricket size={14} className="text-purple-400/70" />
+                               <span className="text-surface-200 font-bold">{booking.overs} Overs</span>
+                             </span>
+                           ) : (
+                             <span className="flex items-center gap-1.5">
+                               <MdAccessTime size={14} className="text-primary-400/70" />
+                               {booking.startHours?.length > 1 ? `${booking.startHours.length} Slots: ` : ''}
+                               <span className="text-surface-200 font-bold">{formatHour(booking.startHours[0])} - {formatHour(booking.endHour)}</span>
+                             </span>
+                           )}
                            {booking.ballType && booking.ballType !== 'none' && (
                              <span className="flex items-center gap-1.5">
                                 <MdSportsCricket size={14} className="text-accent-400/70" />

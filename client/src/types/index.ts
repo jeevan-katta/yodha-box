@@ -1,4 +1,4 @@
-export type TurfId = 'A' | 'B';
+export type TurfId = 'A' | 'B' | 'C' | 'D';
 export type SlotStatus = 'available' | 'booked' | 'blocked' | 'locked' | 'pending';
 
 export interface User {
@@ -40,6 +40,7 @@ export interface Booking {
   razorpayPaymentId?: string;
   ballType?: string;
   ballAmount?: number;
+  overs?: number;
   createdAt: string;
   updatedAt: string;
   isBlocked?: boolean; // For manual admin blocks
@@ -55,6 +56,13 @@ export interface PricingRule {
   dayType: 'weekday' | 'weekend';
   startHour: number;
   endHour: number;
+  price: number;
+  isActive: boolean;
+}
+
+export interface BowlingPackage {
+  _id: string;
+  overs: 5 | 10 | 15 | 20;
   price: number;
   isActive: boolean;
 }

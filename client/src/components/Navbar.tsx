@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdClose, MdDashboard, MdHistory, MdLogout, MdMenu, MdLocationOn } from 'react-icons/md';
+import { MdClose, MdHistory, MdLogout, MdMenu, MdLocationOn, MdSportsCricket } from 'react-icons/md';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to={role === 'admin' ? '/admin' : '/dashboard'} className="flex items-center gap-3 group">
+          <Link to={role === 'admin' ? '/admin' : '/activities'} className="flex items-center gap-3 group">
             <div className="h-12 w-16 rounded-lg overflow-hidden bg-white/5 p-1
               group-hover:shadow-lg group-hover:shadow-primary-500/25 transition-all duration-300">
               <img src="/images/logo.png" alt="VSY Logo" className="w-full h-full object-contain scale-110" />
@@ -37,14 +37,14 @@ const Navbar: React.FC = () => {
             {role === 'user' && (
               <>
                 <Link
-                  to="/dashboard"
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${isActive('/dashboard')
+                  to="/activities"
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${isActive('/activities')
                     ? 'bg-primary-500/20 text-primary-400'
                     : 'text-surface-400 hover:text-white hover:bg-white/5'
                     }`}
                 >
                   <div className="flex items-center gap-2">
-                    <MdDashboard /> Book Slots
+                    <MdSportsCricket /> Activities
                   </div>
                 </Link>
                 <Link
@@ -112,15 +112,15 @@ const Navbar: React.FC = () => {
               {role === 'user' && (
                 <>
                   <Link
-                    to="/dashboard"
+                    to="/activities"
                     onClick={() => setMenuOpen(false)}
-                    className={`px-4 py-3 rounded-lg text-sm font-medium ${isActive('/dashboard')
+                    className={`px-4 py-3 rounded-lg text-sm font-medium ${isActive('/activities')
                       ? 'bg-primary-500/20 text-primary-400'
                       : 'text-surface-400 hover:text-white hover:bg-white/5'
                       }`}
                   >
                     <div className="flex items-center gap-2">
-                      <MdDashboard /> Book Slots
+                      <MdSportsCricket /> Activities
                     </div>
                   </Link>
                   <Link

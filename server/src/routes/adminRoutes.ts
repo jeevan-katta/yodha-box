@@ -10,6 +10,8 @@ import {
   updatePricingRule,
   getBlockedSlots,
   migrateWalkIns,
+  getBowlingPackages,
+  updateBowlingPackage,
 } from '../controllers/adminController';
 import { authMiddleware, adminMiddleware } from '../middleware/auth';
 
@@ -34,6 +36,10 @@ router.get('/slots/blocked', getBlockedSlots);
 // Pricing
 router.get('/pricing', getPricingRules);
 router.put('/pricing/:ruleId', updatePricingRule);
+
+// Bowling packages
+router.get('/bowling-packages', getBowlingPackages);
+router.put('/bowling-packages/:packageId', updateBowlingPackage);
 
 // One-time migration utility
 router.post('/migrate-walkins', migrateWalkIns);

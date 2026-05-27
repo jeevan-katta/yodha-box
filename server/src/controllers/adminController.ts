@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Booking } from '../models/Booking';
 import { BlockedSlot } from '../models/BlockedSlot';
 import { PricingRule } from '../models/PricingRule';
+import { BowlingPackage } from '../models/BowlingPackage';
 import { User } from '../models/User';
 import { isValidDate, isValidHour } from '../utils/helpers';
 import { TurfId } from '../types';
@@ -215,7 +216,7 @@ export const adminCollectPayment = async (req: Request, res: Response): Promise<
  */
 export const blockSlot = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { turfId, date, reason, phoneNumber, customerName, ballType = 'none' } = req.body;
+    const { turfId, date, reason, phoneNumber, customerName, ballType = 'none', overs } = req.body;
     let { startHour, startHours } = req.body;
     const adminId = req.userId;
 
@@ -258,6 +259,34 @@ export const blockSlot = async (req: Request, res: Response): Promise<void> => {
         await user.save();
       }
 
+      // Bowling Machine (turf C) — overs-based walk-in
+      if (turfId === 'C' && overs) {
+        const bowlingPkg = await BowlingPackage.findOne({ overs, isActive: true });
+        const price = bowlingPkg ? bowlingPkg.price : overs * 50; // fallback ₹50/over
+
+        const razorpayOrderId = `WALKIN-BOWLING-${Date.now()}`;
+        const booking = await Booking.create({
+          userId: user._id,
+          turfId: 'C',
+          date,
+          startHour: numericStartHours[0],
+          totalAmount: price,
+          paidAmount: price,
+          paymentType: 'full',
+          status: 'confirmed',
+          razorpayOrderId,
+          razorpayPaymentId: 'CASH_PAYMENT',
+          razorpaySignature: 'ADMIN_COLLECTED',
+          ballType: 'none',
+          ballAmount: 0,
+          overs,
+        });
+
+        res.status(201).json({ success: true, message: `Bowling walk-in created (${overs} overs)`, data: [booking] });
+        return;
+      }
+
+      // Arena / Open Ground — time-slot based walk-in
       const pricingRules = await PricingRule.find({ isActive: true }).lean();
       const BALL_PRICES: Record<string, number> = { light_tennis: 80, hard_tennis: 100, none: 0 };
       
@@ -469,20 +498,22 @@ export const getPricingRules = async (_req: Request, res: Response): Promise<voi
     let rules = await PricingRule.find().sort({ turfId: 1, dayType: 1, startHour: 1 });
 
     // Force update if the timings are not the new 6-6 blocks
-    const needsUpdate = rules.length < 8 || rules.some((r: any) => r.endHour !== 18 && r.endHour !== 6);
+    const needsUpdate = rules.length < 16 || rules.some((r: any) => r.endHour !== 18 && r.endHour !== 6);
 
     if (needsUpdate) {
       console.log('🔄 Pricing timings are outdated or missing. Force-repairing rules...');
-      const turfs: ('A' | 'B')[] = ['A', 'B'];
+      await PricingRule.deleteMany({});
+      const turfs: TurfId[] = ['A', 'B', 'C', 'D'];
       const dayTypes: ('weekday' | 'weekend')[] = ['weekday', 'weekend'];
 
       for (const turfId of turfs) {
+        const isBowling = turfId === 'C';
         for (const dayType of dayTypes) {
           // Day Rule (6-18)
-          await PricingRule.create({ turfId, dayType, startHour: 6, endHour: 18, price: dayType === 'weekday' ? 800 : 1000 });
+          await PricingRule.create({ turfId, dayType, startHour: 6, endHour: 18, price: isBowling ? 60 : (dayType === 'weekday' ? 800 : 1000) });
 
           // Night Rule (18-6)
-          await PricingRule.create({ turfId, dayType, startHour: 18, endHour: 6, price: dayType === 'weekday' ? 1200 : 1500 });
+          await PricingRule.create({ turfId, dayType, startHour: 18, endHour: 6, price: isBowling ? 60 : (dayType === 'weekday' ? 1200 : 1500) });
         }
       }
       // Re-fetch now that they are created
@@ -598,5 +629,58 @@ export const getBlockedSlots = async (req: Request, res: Response): Promise<void
     res.status(200).json({ success: true, data: blocked });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to get blocked slots' });
+  }
+};
+
+/**
+ * Get bowling over packages. Auto-seeds defaults if not present.
+ */
+export const getBowlingPackages = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    let packages = await BowlingPackage.find().sort({ overs: 1 });
+
+    // Seed defaults if none exist
+    if (packages.length === 0) {
+      const defaults = [
+        { overs: 5,  price: 250 },
+        { overs: 10, price: 450 },
+        { overs: 15, price: 600 },
+        { overs: 20, price: 750 },
+      ];
+      await BowlingPackage.insertMany(defaults);
+      packages = await BowlingPackage.find().sort({ overs: 1 });
+      console.log('✅ Bowling packages seeded with defaults');
+    }
+
+    res.status(200).json({ success: true, data: packages });
+  } catch (error) {
+    console.error('BowlingPackages Fetch Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to get bowling packages' });
+  }
+};
+
+/**
+ * Update a bowling package price.
+ */
+export const updateBowlingPackage = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { packageId } = req.params;
+    const { price } = req.body;
+
+    if (typeof price !== 'number' || price < 0) {
+      res.status(400).json({ success: false, message: 'Invalid price' });
+      return;
+    }
+
+    const pkg = await BowlingPackage.findByIdAndUpdate(packageId, { price }, { new: true });
+    if (!pkg) {
+      res.status(404).json({ success: false, message: 'Package not found' });
+      return;
+    }
+
+    res.status(200).json({ success: true, data: pkg, message: 'Package price updated' });
+  } catch (error) {
+    console.error('BowlingPackage Update Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to update bowling package' });
   }
 };

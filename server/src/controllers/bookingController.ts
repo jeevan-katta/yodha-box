@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Booking } from '../models/Booking';
 import { SlotLock } from '../models/SlotLock';
+import { BowlingPackage } from '../models/BowlingPackage';
 import { isSlotAvailable } from '../services/slotService';
 import { createOrder, verifyPaymentSignature } from '../services/paymentService';
 import { getSlotPrice } from '../services/pricingService';
@@ -22,13 +23,64 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    if (!turfId || !['A', 'B'].includes(turfId)) {
+    if (!turfId || !['A', 'B', 'C', 'D'].includes(turfId)) {
       res.status(400).json({ success: false, message: 'Invalid turf ID' });
       return;
     }
 
     if (!date || !isValidDate(date) || !isFutureOrToday(date)) {
       res.status(400).json({ success: false, message: 'Invalid or past date' });
+      return;
+    }
+
+    // Dedicated Bowling Net booking flow (turfId 'C')
+    if (turfId === 'C') {
+      const { overs } = req.body;
+      if (!overs || typeof overs !== 'number' || overs < 1) {
+        res.status(400).json({ success: false, message: 'Invalid number of overs selected' });
+        return;
+      }
+
+      const hour = Array.isArray(startHours) ? startHours[0] : (req.body.startHour || 6);
+
+      // Calculate total amount based on the selected bowling package
+      const bowlingPkg = await BowlingPackage.findOne({ overs, isActive: true });
+      const totalBookingAmount = bowlingPkg ? bowlingPkg.price : overs * 50; // fallback ₹50/over
+
+      // Create Razorpay order
+      const bookingRef = `VSY-${turfId}-${Date.now().toString(36)}`;
+      const order = await createOrder(totalBookingAmount, bookingRef);
+
+      // Create pending booking record
+      const booking = await Booking.create({
+        userId: new mongoose.Types.ObjectId(userId),
+        turfId,
+        date,
+        startHour: hour,
+        totalAmount: totalBookingAmount,
+        paidAmount: totalBookingAmount,
+        paymentType: 'full',
+        status: 'pending',
+        razorpayOrderId: order.orderId,
+        overs: overs,
+      });
+
+      res.status(201).json({
+        success: true,
+        message: 'Order created for Bowling Net booking.',
+        data: {
+          bookingIds: [booking._id],
+          orderId: order.orderId,
+          amount: order.amount,
+          currency: order.currency,
+          razorpayKeyId: config.razorpay.keyId,
+          turfId,
+          date,
+          startHours: [hour],
+          paymentType: 'full',
+          totalBookingAmount,
+        },
+      });
       return;
     }
 

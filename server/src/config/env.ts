@@ -14,5 +14,5 @@ export const config = {
   adminPassword: process.env.ADMIN_PASSWORD || 'admin@123',
   slotLockDuration: parseInt(process.env.SLOT_LOCK_DURATION || '5', 10),
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
-  turfs: ['A', 'B'] as const,
+  turfs: ['A', 'B', 'D'] as const,
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import DatePicker from '../components/DatePicker';
 import SlotGrid from '../components/SlotGrid';
@@ -7,36 +8,36 @@ import { getSlots } from '../services/api';
 import { getDateRange, getTodayStr, isWeekend } from '../utils/helpers';
 import type { SlotInfo, TurfId } from '../types';
 import toast from 'react-hot-toast';
-import { MdRefresh, MdInfo } from 'react-icons/md';
+import { MdRefresh, MdInfo, MdKeyboardBackspace } from 'react-icons/md';
 
 const DashboardPage: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [selectedDate, setSelectedDate] = useState(getTodayStr());
-  const [selectedTurf, setSelectedTurf] = useState<TurfId>('A');
-  const [slotsA, setSlotsA] = useState<SlotInfo[]>([]);
-  const [slotsB, setSlotsB] = useState<SlotInfo[]>([]);
-  const [loadingA, setLoadingA] = useState(true);
-  const [loadingB, setLoadingB] = useState(true);
+  const [selectedTurf] = useState<TurfId>(() => {
+    const state = location.state as { preselectedTurf?: TurfId } | null;
+    return state?.preselectedTurf || 'A';
+  });
+  const [slots, setSlots] = useState<SlotInfo[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedSlots, setSelectedSlots] = useState<SlotInfo[]>([]);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
 
   const dates = getDateRange(30); // Show 30 days
 
   const fetchSlots = useCallback(async (date: string) => {
-    setLoadingA(true);
-    setLoadingB(true);
-
+    setLoading(true);
     try {
-      const [resA, resB] = await Promise.all([getSlots('A', date), getSlots('B', date)]);
-
-      if (resA.success && resA.data) setSlotsA(resA.data.slots);
-      if (resB.success && resB.data) setSlotsB(resB.data.slots);
+      const res = await getSlots(selectedTurf, date);
+      if (res.success && res.data) {
+        setSlots(res.data.slots);
+      }
     } catch {
       toast.error('Failed to load slots');
     } finally {
-      setLoadingA(false);
-      setLoadingB(false);
+      setLoading(false);
     }
-  }, []);
+  }, [selectedTurf]);
 
   useEffect(() => {
     fetchSlots(selectedDate);
@@ -68,6 +69,13 @@ const DashboardPage: React.FC = () => {
       <Navbar />
 
       <main className="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        {/* Switch Arena Back Action */}
+        <button
+          onClick={() => navigate('/activities')}
+          className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-primary-400 hover:text-primary-300 hover:bg-white/10 transition-all cursor-pointer animate-fade-in"
+        >
+          <MdKeyboardBackspace size={16} /> Back to Activities
+        </button>
         {/* Header */}
         <div className="mb-8 animate-fade-in flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
@@ -83,7 +91,7 @@ const DashboardPage: React.FC = () => {
             onClick={() => fetchSlots(selectedDate)}
             className="w-fit px-4 py-2 rounded-xl bg-white/5 text-sm text-surface-300 hover:text-white hover:bg-white/10 flex items-center gap-2 transition-all border border-white/5"
           >
-            <MdRefresh size={18} className={loadingA || loadingB ? 'animate-spin' : ''} />
+            <MdRefresh size={18} className={loading ? 'animate-spin' : ''} />
             Refresh Slots
           </button>
         </div>
@@ -109,28 +117,6 @@ const DashboardPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Turf Tabs */}
-        <div className="flex gap-2 mb-6">
-          {(['A', 'B'] as TurfId[]).map((turf) => (
-            <button
-              key={turf}
-              onClick={() => {
-                setSelectedTurf(turf);
-                setSelectedSlots([]); // Clear selection when switching turfs
-              }}
-              className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
-                selectedTurf === turf
-                  ? turf === 'A'
-                    ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30 ring-1 ring-primary-500/50'
-                    : 'bg-accent-500/20 text-accent-400 border border-accent-500/30 ring-1 ring-accent-500/50'
-                  : 'bg-white/5 text-surface-400 border border-white/5 hover:bg-white/10'
-              }`}
-            >
-              Arena {turf === 'A' ? '1' : '2'}
-            </button>
-          ))}
-        </div>
-
         {/* Slot Grids */}
         <div className="space-y-8 animate-slide-up">
           {(() => {
@@ -138,29 +124,20 @@ const DashboardPage: React.FC = () => {
             const currentHour = new Date().getHours();
             
             // Filter out past hours if today
-            const filterPastSlots = (slots: SlotInfo[]) => {
-              if (selectedDate !== today) return slots;
-              return slots.filter((slot) => slot.hour > currentHour);
+            const filterPastSlots = (slotsInfo: SlotInfo[]) => {
+              if (selectedDate !== today) return slotsInfo;
+              return slotsInfo.filter((slot) => slot.hour > currentHour);
             };
 
-            const filteredSlotsA = filterPastSlots(slotsA);
-            const filteredSlotsB = filterPastSlots(slotsB);
+            const filteredSlots = filterPastSlots(slots);
 
-            return selectedTurf === 'A' ? (
+            return (
               <SlotGrid
-                slots={filteredSlotsA}
-                turfId="A"
+                slots={filteredSlots}
+                turfId={selectedTurf}
                 selectedSlotHours={selectedSlots.map(s => s.hour)}
                 onSlotToggle={handleSlotToggle}
-                isLoading={loadingA}
-              />
-            ) : (
-              <SlotGrid
-                slots={filteredSlotsB}
-                turfId="B"
-                selectedSlotHours={selectedSlots.map(s => s.hour)}
-                onSlotToggle={handleSlotToggle}
-                isLoading={loadingB}
+                isLoading={loading}
               />
             );
           })()}
@@ -169,7 +146,7 @@ const DashboardPage: React.FC = () => {
 
       {/* Selection Action Bar */}
       {selectedSlots.length > 0 && (
-        <div className="fixed bottom-6 inset-x-0 mx-auto w-[90%] max-w-2xl z-50 animate-slide-up">
+        <div className="fixed bottom-24 md:bottom-6 inset-x-0 mx-auto w-[90%] max-w-2xl z-50 animate-slide-up">
           <div className="bg-surface-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-3 sm:p-4 shadow-2xl shadow-black/50 flex items-center justify-between">
             <div className="flex flex-col truncate pr-2">
               <span className="text-[10px] sm:text-xs text-surface-400 font-medium uppercase tracking-wider truncate">
@@ -203,7 +180,7 @@ const DashboardPage: React.FC = () => {
         isOpen={bookingModalOpen}
         onClose={() => setBookingModalOpen(false)}
         selectedSlots={selectedSlots}
-        turfId={selectedTurf}
+        turfId={selectedTurf || 'A'}
         date={selectedDate}
         onBookingComplete={handleBookingComplete}
       />
