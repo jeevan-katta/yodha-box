@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { loginWithPhone, getPublicPricing } from '../services/api';
+import { loginWithPhone, getPublicPricing, getPublicBowlingPackages } from '../services/api';
 import toast from 'react-hot-toast';
 import {
   MdSportsCricket, MdPhone, MdArrowForward, MdLocationOn,
@@ -21,14 +21,19 @@ const LoginPage: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pricingRules, setPricingRules] = useState<PricingRule[]>([]);
   const [pricingLoading, setPricingLoading] = useState(true);
+  const [bowlingPackages, setBowlingPackages] = useState<any[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
   const [mainImageIdx, setMainImageIdx] = useState(0);
   const [randomSideImages, setRandomSideImages] = useState<string[]>([]);
 
   const ALL_GALLERY_IMAGES = [
-    '1.jpg.jpg', '2.jpg.jpg', '3.jpg.jpg', '4.jpg.jpg', '5.jpg.jpg',
-    '6.jpg.PNG', '7.jpg.PNG', '8.jpg.PNG', '9.jpg.PNG', '10.jpg.PNG',
-    '11.jpg.PNG', '12.jpg.PNG', '13.jpg.PNG', '14.jpg.PNG'
+    '/images/pickleball.png',
+    '/images/bowling_machine.png',
+    '/images/box_cricket.png',
+    '/images/gallery_pickleball.png',
+    '/images/gallery_cricket.png',
+    '/images/gallery_lounge.png',
+    '/images/gallery_arena_view.png'
   ];
 
   useEffect(() => {
@@ -58,9 +63,15 @@ const LoginPage: React.FC = () => {
     // Fetch pricing
     const fetchPricing = async () => {
       try {
-        const res = await getPublicPricing();
-        if (res.success && res.data) {
-          setPricingRules(res.data);
+        const [pricingRes, bowlingRes] = await Promise.all([
+          getPublicPricing(),
+          getPublicBowlingPackages().catch(() => ({ success: false, data: [] }))
+        ]);
+        if (pricingRes.success && pricingRes.data) {
+          setPricingRules(pricingRes.data);
+        }
+        if (bowlingRes.success && bowlingRes.data) {
+          setBowlingPackages(bowlingRes.data);
         }
       } catch (err) {
         console.error('Failed to fetch pricing', err);
@@ -118,7 +129,7 @@ const LoginPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
           <div className="flex items-center gap-4 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <div className="h-14 sm:h-20 w-24 sm:w-32 rounded-xl overflow-hidden bg-white/5 p-1 group-hover:scale-105 transition-all duration-500">
-              <img src="/images/logo.png" alt="VSY Logo" className="w-full h-full object-contain" />
+              <img src="/images/logo.png" alt="Yodha Nets Logo" className="w-full h-full object-contain" />
             </div>
           </div>
 
@@ -128,7 +139,7 @@ const LoginPage: React.FC = () => {
             <a href="#pricing" className="text-sm font-bold text-surface-400 hover:text-white transition-colors">Pricing</a>
             <a href="#gallery" className="text-sm font-bold text-surface-400 hover:text-white transition-colors">Gallery</a>
             <a
-              href="https://www.google.com/maps/search/VSY+Box+Cricket+Nadergul"
+              href="https://maps.app.goo.gl/BCCghi3hbdX2P5YZ9?g_st=ic"
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-white text-sm font-black hover:bg-white/10 transition-all flex items-center gap-2"
@@ -161,7 +172,7 @@ const LoginPage: React.FC = () => {
               <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-bold text-surface-300 hover:bg-white/5">Pricing</a>
               <a href="#gallery" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-bold text-surface-300 hover:bg-white/5">Gallery</a>
               <a
-                href="https://www.google.com/maps/search/VSY+Box+Cricket+Nadergul"
+                href="https://maps.app.goo.gl/BCCghi3hbdX2P5YZ9?g_st=ic"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mx-4 mt-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-bold flex items-center justify-center gap-2"
@@ -178,7 +189,7 @@ const LoginPage: React.FC = () => {
       <section className="relative min-h-screen flex items-center justify-center pt-8 sm:pt-12 px-4 sm:px-6 overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0 z-0">
-          <img src="/images/hero_turf.png" alt="VSY Arena" className="w-full h-full object-cover scale-105" />
+          <img src="/images/gallery_arena_view.png" alt="Yodha Nets Arena" className="w-full h-full object-cover scale-105" />
           <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/70 to-surface-950/40" />
         </div>
 
@@ -187,7 +198,7 @@ const LoginPage: React.FC = () => {
           <div className="space-y-5 sm:space-y-8 animate-fade-in text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-primary-500/10 border border-primary-500/20 backdrop-blur-md">
               <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
-              <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-primary-400">Now Open in Nadergul</span>
+              <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-primary-400">Now Open in Safilguda</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-black leading-[0.9] tracking-tighter">
@@ -196,7 +207,7 @@ const LoginPage: React.FC = () => {
             </h1>
 
             <p className="text-sm sm:text-lg text-surface-300 max-w-lg mx-auto lg:mx-0 leading-relaxed font-medium">
-              Hyderabad's most premium 360° Box Cricket experience. Two high-intensity floodlit turfs, 24/7 availability, and professional-grade artificial grass.
+              Hyderabad's most premium multi-sport experience. Two state-of-the-art Pickleball courts, high-intensity Box Cricket turf, and a professional bowling machine.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
@@ -293,7 +304,7 @@ const LoginPage: React.FC = () => {
               {/* Locate Us Button Below Card */}
               <div className="mt-4">
                 <a
-                  href="https://www.google.com/maps/search/VSY+Box+Cricket+Nadergul"
+                  href="https://maps.app.goo.gl/BCCghi3hbdX2P5YZ9?g_st=ic"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs font-black uppercase tracking-widest hover:bg-white/10 transition-all"
@@ -314,7 +325,7 @@ const LoginPage: React.FC = () => {
       <div className="relative py-8 sm:py-12 border-y border-white/5 bg-surface-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
           {[
-            { label: 'Arenas', value: '02', icon: MdSportsCricket },
+            { label: 'Activities', value: '04', icon: MdSportsCricket },
             { label: 'Rating', value: '4.8', icon: MdStar },
             { label: 'Hours Played', value: '10K+', icon: MdAccessTime },
             { label: 'Athletes', value: '5K+', icon: MdGroups },
@@ -339,7 +350,7 @@ const LoginPage: React.FC = () => {
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
             {/* Pricing left image */}
             <div className="hidden lg:block lg:col-span-5 relative h-full min-h-[500px] rounded-3xl overflow-hidden shadow-2xl">
-              <img src="/images/box_9.jpg.PNG" alt="Pricing Box Photo" className="w-full h-full object-cover" />
+              <img src="/images/pickleball.png" alt="Pricing Box Photo" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/20 to-transparent flex items-bottom p-8 flex-col justify-end">
                 <h3 className="text-3xl font-display font-black text-white">PLAY ANYTIME</h3>
                 <p className="text-primary-400 font-bold uppercase tracking-widest text-sm">24/7 SLOTS AVAILABLE</p>
@@ -358,14 +369,24 @@ const LoginPage: React.FC = () => {
                   );
                   if (rule) return rule.price;
 
-                  // Fallback same as server
+                  // Fallback pricing
                   if (turf === 'A') {
                     if (dayType === 'weekend') return isNight ? 1000 : 900;
                     return isNight ? 800 : 700;
-                  } else {
+                  } else if (turf === 'B') {
                     if (dayType === 'weekend') return isNight ? 1200 : 1000;
                     return isNight ? 900 : 800;
+                  } else if (turf === 'C') {
+                    return 60;
+                  } else { // Turf D
+                    if (dayType === 'weekend') return isNight ? 1500 : 1000;
+                    return isNight ? 1200 : 800;
                   }
+                };
+
+                const getBowlingPrice = (overs: number) => {
+                  const pkg = bowlingPackages.find(p => p.overs === overs);
+                  return pkg ? pkg.price : 250; // fallback ₹250
                 };
 
                 return (
@@ -382,28 +403,58 @@ const LoginPage: React.FC = () => {
                         WEEKDAYS
                       </h3>
 
-                      <div className="grid grid-cols-2 gap-4 relative z-10">
-                        <div className="space-y-4">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-primary-500">Arena 1</p>
-                          <div className="space-y-1">
-                            <p className="text-[10px] text-surface-400 font-bold uppercase tracking-tighter">Day</p>
-                            <p className="text-xl font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('A', 'weekday', false)}<span className="text-[9px] font-medium text-surface-500">/hr</span></p>
-                          </div>
-                          <div className="space-y-1">
-                            <p className="text-[10px] text-surface-400 font-bold uppercase tracking-tighter">Night</p>
-                            <p className="text-xl font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('A', 'weekday', true)}<span className="text-[9px] font-medium text-surface-500">/hr</span></p>
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-6 relative z-10">
+                        {/* Pickleball 1 */}
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-primary-400">Pickleball 1</p>
+                          <div className="flex justify-between items-center bg-white/5 p-2 rounded-xl">
+                            <div>
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Day</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('A', 'weekday', false)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
+                            <div className="text-right border-l border-white/5 pl-2">
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Night</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('A', 'weekday', true)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
                           </div>
                         </div>
 
-                        <div className="space-y-4 border-l border-white/5 pl-4">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-accent-500">Arena 2</p>
-                          <div className="space-y-1">
-                            <p className="text-[10px] text-surface-400 font-bold uppercase tracking-tighter">Day</p>
-                            <p className="text-xl font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('B', 'weekday', false)}<span className="text-[9px] font-medium text-surface-500">/hr</span></p>
+                        {/* Pickleball 2 */}
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-accent-400">Pickleball 2</p>
+                          <div className="flex justify-between items-center bg-white/5 p-2 rounded-xl">
+                            <div>
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Day</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('B', 'weekday', false)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
+                            <div className="text-right border-l border-white/5 pl-2">
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Night</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('B', 'weekday', true)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
                           </div>
-                          <div className="space-y-1">
-                            <p className="text-[10px] text-surface-400 font-bold uppercase tracking-tighter">Night</p>
-                            <p className="text-xl font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('B', 'weekday', true)}<span className="text-[9px] font-medium text-surface-500">/hr</span></p>
+                        </div>
+
+                        {/* Box Cricket */}
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Box Cricket</p>
+                          <div className="flex justify-between items-center bg-white/5 p-2 rounded-xl">
+                            <div>
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Day</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('D', 'weekday', false)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
+                            <div className="text-right border-l border-white/5 pl-2">
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Night</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('D', 'weekday', true)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Bowling Machine */}
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-purple-400">Bowling Machine</p>
+                          <div className="flex flex-col justify-center bg-white/5 p-2 rounded-xl h-[46px]">
+                            <p className="text-[9px] text-surface-400 font-bold uppercase">Session Rate</p>
+                            <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getBowlingPrice(5)}<span className="text-[8px] font-medium text-surface-500"> / 5 Overs</span></p>
                           </div>
                         </div>
                       </div>
@@ -424,28 +475,58 @@ const LoginPage: React.FC = () => {
                         WEEKENDS
                       </h3>
 
-                      <div className="grid grid-cols-2 gap-4 relative z-10">
-                        <div className="space-y-4">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-primary-500">Arena 1</p>
-                          <div className="space-y-1">
-                            <p className="text-[10px] text-surface-400 font-bold uppercase tracking-tighter">Day</p>
-                            <p className="text-xl font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('A', 'weekend', false)}<span className="text-[9px] font-medium text-surface-500">/hr</span></p>
-                          </div>
-                          <div className="space-y-1">
-                            <p className="text-[10px] text-surface-400 font-bold uppercase tracking-tighter">Night</p>
-                            <p className="text-xl font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('A', 'weekend', true)}<span className="text-[9px] font-medium text-surface-500">/hr</span></p>
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-6 relative z-10">
+                        {/* Pickleball 1 */}
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-primary-400">Pickleball 1</p>
+                          <div className="flex justify-between items-center bg-white/5 p-2 rounded-xl">
+                            <div>
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Day</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('A', 'weekend', false)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
+                            <div className="text-right border-l border-white/5 pl-2">
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Night</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('A', 'weekend', true)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
                           </div>
                         </div>
 
-                        <div className="space-y-4 border-l border-white/5 pl-4">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-accent-500">Arena 2</p>
-                          <div className="space-y-1">
-                            <p className="text-[10px] text-surface-400 font-bold uppercase tracking-tighter">Day</p>
-                            <p className="text-xl font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('B', 'weekend', false)}<span className="text-[9px] font-medium text-surface-500">/hr</span></p>
+                        {/* Pickleball 2 */}
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-accent-400">Pickleball 2</p>
+                          <div className="flex justify-between items-center bg-white/5 p-2 rounded-xl">
+                            <div>
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Day</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('B', 'weekend', false)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
+                            <div className="text-right border-l border-white/5 pl-2">
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Night</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('B', 'weekend', true)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
                           </div>
-                          <div className="space-y-1">
-                            <p className="text-[10px] text-surface-400 font-bold uppercase tracking-tighter">Night</p>
-                            <p className="text-xl font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('B', 'weekend', true)}<span className="text-[9px] font-medium text-surface-500">/hr</span></p>
+                        </div>
+
+                        {/* Box Cricket */}
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Box Cricket</p>
+                          <div className="flex justify-between items-center bg-white/5 p-2 rounded-xl">
+                            <div>
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Day</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('D', 'weekend', false)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
+                            <div className="text-right border-l border-white/5 pl-2">
+                              <p className="text-[9px] text-surface-400 font-bold uppercase">Night</p>
+                              <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getPriceOrDefault('D', 'weekend', true)}<span className="text-[8px] font-medium text-surface-500">/hr</span></p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Bowling Machine */}
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-purple-400">Bowling Machine</p>
+                          <div className="flex flex-col justify-center bg-white/5 p-2 rounded-xl h-[46px]">
+                            <p className="text-[9px] text-surface-400 font-bold uppercase">Session Rate</p>
+                            <p className="text-sm font-display font-black text-white">₹{pricingLoading ? '...' : getBowlingPrice(5)}<span className="text-[8px] font-medium text-surface-500"> / 5 Overs</span></p>
                           </div>
                         </div>
                       </div>
@@ -468,20 +549,20 @@ const LoginPage: React.FC = () => {
       <section id="features" className="py-16 sm:py-32 px-4 sm:px-6 relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-6xl font-display font-black mb-4 sm:mb-6">WHY PLAY AT <span className="gradient-text">VSY PRO?</span></h2>
-            <p className="text-surface-400 max-w-2xl mx-auto font-medium text-sm sm:text-base">Built by cricket lovers for cricket lovers. Our facilities are designed to provide the highest quality gameplay experience.</p>
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-display font-black mb-4 sm:mb-6">WHY PLAY AT <span className="gradient-text">YODHA NETS?</span></h2>
+            <p className="text-surface-400 max-w-2xl mx-auto font-medium text-sm sm:text-base">Built by sports enthusiasts for sports lovers. Our facilities are designed to provide the highest quality gameplay experience.</p>
           </div>
 
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Features list */}
             <div className="lg:col-span-7 grid sm:grid-cols-2 gap-4 sm:gap-6">
               {[
-                { title: 'High-Density Arena', desc: 'Premium artificial grass designed for box cricket offering true bounce.', icon: MdStar, color: 'text-amber-500' },
+                { title: 'High-Density Arena', desc: 'Premium artificial turfs and professional court surfaces designed for safety and bounce.', icon: MdStar, color: 'text-amber-500' },
                 { title: '24/7 Availability', desc: 'Book your favorite slot anytime, day or night.', icon: MdAccessTime, color: 'text-primary-500' },
                 { title: 'Secure Environment', desc: 'Fully fenced box architecture ensures safety.', icon: MdSecurity, color: 'text-green-500' },
                 { title: 'Instant Payments', desc: 'Hassle-free online booking with Razorpay.', icon: MdPayment, color: 'text-accent-500' },
                 { title: 'Match History', desc: 'View all your past bookings in your dashboard.', icon: MdHistory, color: 'text-pink-500' },
-                { title: 'Central Location', desc: 'Located in Nadergul with ample parking space in Hyderabad.', icon: MdLocationOn, color: 'text-red-500' },
+                { title: 'Central Location', desc: 'Located in Safilguda, Secunderabad with ample parking space.', icon: MdLocationOn, color: 'text-red-500' },
               ].map((f, i) => (
                 <div key={i} className="glass-card-hover p-6 border-none bg-white/[0.03]">
                   <f.icon className={`${f.color} mb-4`} size={28} />
@@ -493,7 +574,7 @@ const LoginPage: React.FC = () => {
 
             {/* Features image */}
             <div className="hidden lg:block lg:col-span-5 relative h-full min-h-[600px] rounded-3xl overflow-hidden shadow-2xl">
-              <img src="/images/box_6.jpg.PNG" alt="Features Box Photo" className="w-full h-full object-cover" />
+              <img src="/images/box_cricket.png" alt="Features Box Photo" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/20 to-transparent flex items-bottom p-8 flex-col justify-end">
                 <h3 className="text-3xl font-display font-black text-white">THE CHAMPION'S <br />CHOICE</h3>
                 <p className="text-accent-400 font-bold uppercase tracking-widest text-sm mt-2">Elite Box Cricket Experience</p>
@@ -509,8 +590,8 @@ const LoginPage: React.FC = () => {
       <section id="gallery" className="pb-16 sm:pb-32 pt-16 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-6xl font-display font-black mb-4"><span className="text-white">TURF</span> <span className="gradient-text">GALLERY</span></h2>
-            <p className="text-surface-400 max-w-2xl mx-auto font-medium text-sm sm:text-base">Take a look at Hyderabad's premier box cricket facility.</p>
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-display font-black mb-4"><span className="text-white">ARENA</span> <span className="gradient-text">GALLERY</span></h2>
+            <p className="text-surface-400 max-w-2xl mx-auto font-medium text-sm sm:text-base">Take a look at Hyderabad's premier multi-sport facility.</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:h-[600px]">
             {/* Image 1: Main large image */}
@@ -519,7 +600,7 @@ const LoginPage: React.FC = () => {
               className="col-span-2 row-span-2 relative rounded-2xl sm:rounded-3xl overflow-hidden group cursor-pointer"
             >
               <img
-                src={`/images/box_${ALL_GALLERY_IMAGES[mainImageIdx]}`}
+                src={ALL_GALLERY_IMAGES[mainImageIdx]}
                 alt="Box Main"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -533,13 +614,13 @@ const LoginPage: React.FC = () => {
 
             {/* Image 2 */}
             <div className="col-span-1 row-span-1 relative rounded-2xl sm:rounded-3xl overflow-hidden group">
-              <img src={`/images/box_${randomSideImages[0] || '2.jpg.jpg'}`} alt="Box Photo 2" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <img src={randomSideImages[0] || ALL_GALLERY_IMAGES[1]} alt="Box Photo 2" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
 
             {/* Image 3 */}
             <div className="col-span-1 row-span-1 relative rounded-2xl sm:rounded-3xl overflow-hidden group">
-              <img src={`/images/box_${randomSideImages[1] || '3.jpg.jpg'}`} alt="Box Photo 3" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <img src={randomSideImages[1] || ALL_GALLERY_IMAGES[2]} alt="Box Photo 3" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
 
@@ -554,7 +635,7 @@ const LoginPage: React.FC = () => {
 
             {/* Final tall grid item */}
             <div className="col-span-2 md:col-span-1 row-span-1 relative rounded-2xl sm:rounded-3xl overflow-hidden group h-[200px] md:h-auto">
-              <img src={`/images/box_${randomSideImages[2] || '4.jpg.jpg'}`} alt="Box Photo 4" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <img src={randomSideImages[2] || ALL_GALLERY_IMAGES[3]} alt="Box Photo 4" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
           </div>
@@ -574,10 +655,10 @@ const LoginPage: React.FC = () => {
                       <MdLocationOn className="text-primary-400" size={20} />
                     </div>
                     <div>
-                      <p className="font-bold text-white text-sm sm:text-base mb-1">Nadergul, Hyderabad</p>
-                      <p className="text-xs sm:text-sm text-surface-400 leading-relaxed">VSY Box Cricket, Village Road,<br />Besides Sanjeevani Park, Hyderabad 501510</p>
+                      <p className="font-bold text-white text-sm sm:text-base mb-1">Safilguda, Secunderabad</p>
+                      <p className="text-xs sm:text-sm text-surface-400 leading-relaxed">Plot No. 162, Road No. 3, Near Jain Mandir,<br />Lalwani Nagar, East Anandbagh, Safilguda, Secunderabad 500047</p>
                       <a
-                        href="https://maps.app.goo.gl/LM4hCLcgC6bb4EcC8"
+                        href="https://maps.app.goo.gl/BCCghi3hbdX2P5YZ9?g_st=ic"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 text-primary-400 text-[10px] sm:text-xs font-black uppercase tracking-widest mt-3 sm:mt-4 hover:gap-3 transition-all"
@@ -595,10 +676,10 @@ const LoginPage: React.FC = () => {
                       <p className="font-bold text-white text-sm sm:text-base mb-1">Direct Bookings</p>
                       <div className="space-y-0.5">
                         <p className="text-xs sm:text-sm text-surface-400">
-                          <a href="tel:+919502154297" className="hover:text-primary-400 transition-colors">+91 95021 54297</a>
+                          <a href="tel:+919133101999" className="hover:text-primary-400 transition-colors">+91 91331 01999</a>
                         </p>
                         <p className="text-xs sm:text-sm text-surface-400">
-                          <a href="tel:+916305277053" className="hover:text-primary-400 transition-colors">+91 6305-277053</a>
+                          <a href="tel:+919133661919" className="hover:text-primary-400 transition-colors">+91 91336 61919</a>
                         </p>
                       </div>
                     </div>
@@ -607,13 +688,13 @@ const LoginPage: React.FC = () => {
               </div>
 
               <div className="flex gap-3 sm:gap-4">
-                <a href="https://www.instagram.com/vsyboxcricketpro/" target="_blank" rel="noopener noreferrer" className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/5 flex items-center justify-center hover:bg-pink-500/20 hover:text-pink-400 transition-all">
+                <a href="https://www.instagram.com/yodha_cricket_nets" target="_blank" rel="noopener noreferrer" className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/5 flex items-center justify-center hover:bg-pink-500/20 hover:text-pink-400 transition-all">
                   <FaInstagram size={22} />
                 </a>
-                <a href="https://www.youtube.com/@vsysportsarena" target="_blank" rel="noopener noreferrer" className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/5 flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 transition-all">
+                <a href="https://www.youtube.com/results?search_query=yodha+cricket+nets" target="_blank" rel="noopener noreferrer" className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/5 flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 transition-all">
                   <FaYoutube size={22} />
                 </a>
-                <a href="https://wa.me/919502154297" target="_blank" rel="noopener noreferrer" className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/5 flex items-center justify-center hover:bg-green-500/20 hover:text-green-500 transition-all">
+                <a href="https://wa.me/919133101999" target="_blank" rel="noopener noreferrer" className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/5 flex items-center justify-center hover:bg-green-500/20 hover:text-green-500 transition-all">
                   <FaWhatsapp size={22} />
                 </a>
               </div>
@@ -621,7 +702,7 @@ const LoginPage: React.FC = () => {
 
             <div className="relative aspect-video lg:aspect-square rounded-2xl sm:rounded-3xl overflow-hidden grayscale contrast-125 opacity-70 border border-white/10 shadow-2xl">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3809.5855260172607!2d78.5414633749445!3d17.28741348358485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcba33c566df96f%3A0x63925de9bcc65057!2sVSY%20BOX%20CRICKET!5e0!3m2!1sen!2sin!4v1712745321345!5m2!1sen!2sin"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.28784260172607!2d78.536968!3d17.443905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9bb70022aa43%3A0x336e2aceb44d7a8c!2sYodha%20Indoor%20Cricket%20Nets!5e0!3m2!1sen!2sin!4v1712745321345!5m2!1sen!2sin"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -640,10 +721,10 @@ const LoginPage: React.FC = () => {
           <div>
             <div className="flex flex-col items-center md:items-start gap-3 mb-4 sm:mb-6">
               <div className="h-14 sm:h-20 w-24 sm:w-32 rounded-xl overflow-hidden bg-white/5 p-1">
-                <img src="/images/logo.png" alt="VSY Logo" className="w-full h-full object-contain" />
+                <img src="/images/logo.png" alt="Yodha Nets Logo" className="w-full h-full object-contain" />
               </div>
             </div>
-            <p className="text-surface-500 text-xs sm:text-sm max-w-xs mx-auto md:mx-0 font-medium">Providing the best athletic experience in Hyderabad since 2024.</p>
+            <p className="text-surface-500 text-xs sm:text-sm max-w-xs mx-auto md:mx-0 font-medium">Providing the best athletic experience in Hyderabad since 2026.</p>
           </div>
 
           <div className="flex flex-wrap justify-center gap-8 sm:gap-12">
@@ -661,13 +742,13 @@ const LoginPage: React.FC = () => {
               <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-surface-500 font-bold uppercase tracking-tighter">
                 <li><a href="#" className="hover:text-primary-400">Terms</a></li>
                 <li><a href="#" className="hover:text-primary-400">Privacy</a></li>
-                <li><a href="mailto:vsysportsarena@gmail.com" className="hover:text-primary-400">Email Us</a></li>
+                <li><a href="mailto:support@yodhanets.com" className="hover:text-primary-400">Email Us</a></li>
               </ul>
             </div>
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-10 sm:mt-20 pt-6 sm:pt-8 border-t border-white/5 flex flex-col items-center gap-4">
-          <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] sm:tracking-[0.4em] text-surface-600">© 2024 VSY SPORTS ARENA • HYDERABAD</p>
+          <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] sm:tracking-[0.4em] text-surface-600">© 2026 YODHA NETS SPORTS ARENA • HYDERABAD</p>
         </div>
       </footer>
     </div>

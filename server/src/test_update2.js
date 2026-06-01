@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/vsy-box-cricket').then(async () => {
+mongoose.connect('mongodb://localhost:27017/yodha-nets').then(async () => {
     try {
         const PR = mongoose.connection.collection('pricingrules');
         const docs = await PR.find({}).toArray();

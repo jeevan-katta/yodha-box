@@ -1,6 +1,6 @@
-# 🏏 VSY Box Cricket Pro
+# 🔥 Yodha Nets Pro
 
-**Hyderabad's Biggest 360° Box Cricket Arena** — Turf Booking Platform at Nadergul
+**Hyderabad's Premium Pickleball & Box Cricket Arena** — Booking Platform at Safilguda
 
 ## 🚀 Tech Stack
 
@@ -13,7 +13,7 @@
 ## 📁 Project Structure
 
 ```
-vsy/
+yodha/
 ├── server/          # Express backend
 │   └── src/
 │       ├── config/       # DB, env, Razorpay setup
@@ -39,7 +39,7 @@ vsy/
 
 ## 🛠️ Setup & Run
 
-### Prerequisites
+## Prerequisites
 - Node.js 18+
 - MongoDB running locally (or Atlas URI)
 - Razorpay account (test keys)
@@ -82,7 +82,7 @@ cd client && npm run dev
 
 ## 🔑 Default Credentials
 
-- **Admin**: admin@vsyboxcricket.com / admin@123
+- **Admin**: admin@yodhanets.com / admin@123
 - **User**: Any valid 10-digit Indian phone number
 
 ## 💰 Pricing

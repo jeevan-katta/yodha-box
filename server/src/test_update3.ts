@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { clear } from 'console';
 
 async function test() {
-    await mongoose.connect('mongodb://localhost:27017/vsy-box-cricket');
+    await mongoose.connect('mongodb://localhost:27017/yodha-nets');
     const { PricingRule } = await import('./models/PricingRule');
     
     try {

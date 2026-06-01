@@ -29,10 +29,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const logout = useCallback(() => {
-    localStorage.removeItem('vsy_token');
-    localStorage.removeItem('vsy_user');
-    localStorage.removeItem('vsy_admin');
-    localStorage.removeItem('vsy_role');
+    localStorage.removeItem('yodha_token');
+    localStorage.removeItem('yodha_user');
+    localStorage.removeItem('yodha_admin');
+    localStorage.removeItem('yodha_role');
     setState({ user: null, admin: null, token: null, role: null, isLoading: false });
   }, []);
 
@@ -44,7 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           ...prev,
           user: res.data as User,
         }));
-        localStorage.setItem('vsy_user', JSON.stringify(res.data));
+        localStorage.setItem('yodha_user', JSON.stringify(res.data));
       }
     } catch {
       // Silently fail
@@ -53,10 +53,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Initialize from localStorage
   useEffect(() => {
-    const token = localStorage.getItem('vsy_token');
-    const role = localStorage.getItem('vsy_role') as 'user' | 'admin' | null;
-    const userStr = localStorage.getItem('vsy_user');
-    const adminStr = localStorage.getItem('vsy_admin');
+    const token = localStorage.getItem('yodha_token');
+    const role = localStorage.getItem('yodha_role') as 'user' | 'admin' | null;
+    const userStr = localStorage.getItem('yodha_user');
+    const adminStr = localStorage.getItem('yodha_admin');
 
     if (token && role) {
       const user = userStr ? JSON.parse(userStr) as User : null;
@@ -68,16 +68,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const loginUser = (token: string, user: User) => {
-    localStorage.setItem('vsy_token', token);
-    localStorage.setItem('vsy_user', JSON.stringify(user));
-    localStorage.setItem('vsy_role', 'user');
+    localStorage.setItem('yodha_token', token);
+    localStorage.setItem('yodha_user', JSON.stringify(user));
+    localStorage.setItem('yodha_role', 'user');
     setState({ token, user, admin: null, role: 'user', isLoading: false });
   };
 
   const loginAdmin = (token: string, admin: AdminUser) => {
-    localStorage.setItem('vsy_token', token);
-    localStorage.setItem('vsy_admin', JSON.stringify(admin));
-    localStorage.setItem('vsy_role', 'admin');
+    localStorage.setItem('yodha_token', token);
+    localStorage.setItem('yodha_admin', JSON.stringify(admin));
+    localStorage.setItem('yodha_role', 'admin');
     setState({ token, admin, user: null, role: 'admin', isLoading: false });
   };
 

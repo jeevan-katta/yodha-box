@@ -48,7 +48,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
 
     try {
       setStep('locking');
-      
+
       // Lock each selected slot
       for (const slot of selectedSlots) {
         const lockRes = await lockSlot(turfId, date, slot.hour);
@@ -74,12 +74,12 @@ const BookingModal: React.FC<BookingModalProps> = ({
       // Create booking order for ALL selected hours with selected payment type
       const selectedHours = selectedSlots.map(s => s.hour);
       const orderRes = await createBooking(turfId, date, selectedHours, paymentType, ballType);
-      
+
       if (!orderRes.success || !orderRes.data) {
         clearInterval(timer);
         toast.error(orderRes.message || 'Failed to create order');
         for (const slot of selectedSlots) {
-          await unlockSlot(turfId, date, slot.hour).catch(() => {});
+          await unlockSlot(turfId, date, slot.hour).catch(() => { });
         }
         resetAndClose();
         return;
@@ -102,8 +102,8 @@ const BookingModal: React.FC<BookingModalProps> = ({
         key: orderData.razorpayKeyId,
         amount: orderData.amount * 100,
         currency: orderData.currency,
-        name: 'VSY Box Cricket Pro',
-        description: `Turf ${turfId} | ${formatDate(date)} | ${selectedSlots.length} Slots + ${ballType.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} (${paymentType})`,
+        name: 'Yodha Nets',
+        description: `Turf ${turfId === 'A' ? 'Pickleball 1' : 'Pickleball 2'} | ${formatDate(date)} | ${selectedSlots.length} Slots + ${ballType.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} (${paymentType})`,
         order_id: orderData.orderId,
         handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
           clearInterval(timer);
@@ -143,7 +143,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
           ondismiss: () => {
             clearInterval(timer);
             for (const slot of selectedSlots) {
-               unlockSlot(turfId, date, slot.hour).catch(() => {});
+              unlockSlot(turfId, date, slot.hour).catch(() => { });
             }
             toast.error('Payment cancelled');
             resetAndClose();
@@ -157,7 +157,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
       const message = error.response?.data?.message || (error instanceof Error ? error.message : 'Booking failed');
       toast.error(message);
       for (const slot of selectedSlots) {
-        unlockSlot(turfId, date, slot.hour).catch(() => {});
+        unlockSlot(turfId, date, slot.hour).catch(() => { });
       }
       resetAndClose();
     }
@@ -166,9 +166,9 @@ const BookingModal: React.FC<BookingModalProps> = ({
   const handleDemoPayment = async () => {
     if (!demoOrder) return;
     setStep('verifying');
-    
+
     await new Promise(r => setTimeout(r, 1500));
-    
+
     try {
       const verifyRes = await verifyPayment(
         demoOrder.orderId,
@@ -201,7 +201,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
     old_ball: 0,
     none: 0,
   };
-  
+
   const slotsAmount = selectedSlots.reduce((sum, s) => sum + s.price, 0);
   const ballAmount = BALL_PRICES[ballType];
   const totalAmount = slotsAmount + ballAmount;
@@ -215,7 +215,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={step === 'confirm' ? resetAndClose : () => {}} title="Complete Your Booking">
+    <Modal isOpen={isOpen} onClose={step === 'confirm' ? resetAndClose : () => { }} title="Complete Your Booking">
       {step === 'confirm' && (
         <div className="space-y-4 animate-fade-in">
           {/* Booking Details Card */}
@@ -227,7 +227,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                 </div>
                 <div>
                   <p className="text-[9px] sm:text-[10px] text-surface-400 font-bold uppercase tracking-widest">Selected Facility</p>
-                  <p className="text-white font-black text-base sm:text-lg leading-tight">Arena {turfId === 'A' ? '1' : '2'}</p>
+                  <p className="text-white font-black text-base sm:text-lg leading-tight">{turfId === 'A' ? 'Pickleball 1' : 'Pickleball 2'}</p>
                 </div>
               </div>
               <div className="text-right">
@@ -260,11 +260,10 @@ const BookingModal: React.FC<BookingModalProps> = ({
                   <button
                     key={ball.id}
                     onClick={() => setBallType(ball.id as any)}
-                    className={`flex flex-col items-center p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition-all ${
-                      ballType === ball.id
+                    className={`flex flex-col items-center p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition-all ${ballType === ball.id
                         ? 'bg-primary-500/20 border-primary-500 ring-1 ring-primary-500/30'
                         : 'bg-white/5 border-white/10 hover:bg-white/10'
-                    }`}
+                      }`}
                   >
                     <span className="text-[10px] sm:text-[11px] font-black text-white uppercase text-center mb-0.5 leading-tight">{ball.label}</span>
                     <span className="text-xs sm:text-sm font-black text-white">{ball.id === 'none' ? '—' : (ball.price > 0 ? `₹${ball.price}` : 'Free')}</span>
@@ -279,25 +278,23 @@ const BookingModal: React.FC<BookingModalProps> = ({
             <div className="space-y-2 sm:space-y-3">
               <p className="text-[9px] sm:text-[10px] text-surface-400 font-bold uppercase tracking-widest">Payment Option</p>
               <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                <button 
+                <button
                   onClick={() => setPaymentType('full')}
-                  className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg sm:rounded-xl border transition-all ${
-                    paymentType === 'full' 
-                    ? 'bg-primary-500/20 border-primary-500 ring-1 ring-primary-500/30' 
-                    : 'bg-white/5 border-white/10 hover:bg-white/10'
-                  }`}
+                  className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg sm:rounded-xl border transition-all ${paymentType === 'full'
+                      ? 'bg-primary-500/20 border-primary-500 ring-1 ring-primary-500/30'
+                      : 'bg-white/5 border-white/10 hover:bg-white/10'
+                    }`}
                 >
                   <span className="text-[10px] sm:text-xs font-black text-white uppercase mb-0.5 sm:mb-1">Full Payment</span>
                   <span className="text-base sm:text-lg font-black text-white">₹{totalAmount}</span>
                   <span className="text-[8px] sm:text-[10px] text-surface-400 uppercase tracking-tighter mt-0.5 sm:mt-1 truncate w-full text-center">Pay 100% now</span>
                 </button>
-                <button 
+                <button
                   onClick={() => setPaymentType('advance')}
-                  className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg sm:rounded-xl border transition-all ${
-                    paymentType === 'advance' 
-                    ? 'bg-accent-500/20 border-accent-500 ring-1 ring-accent-500/30' 
-                    : 'bg-white/5 border-white/10 hover:bg-white/10'
-                  }`}
+                  className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg sm:rounded-xl border transition-all ${paymentType === 'advance'
+                      ? 'bg-accent-500/20 border-accent-500 ring-1 ring-accent-500/30'
+                      : 'bg-white/5 border-white/10 hover:bg-white/10'
+                    }`}
                 >
                   <span className="text-[10px] sm:text-xs font-black text-white uppercase mb-0.5 sm:mb-1">Advance (30%)</span>
                   <span className="text-base sm:text-lg font-black text-white">₹{advanceAmount}</span>
@@ -310,16 +307,16 @@ const BookingModal: React.FC<BookingModalProps> = ({
               <div>
                 <p className="text-[9px] sm:text-[10px] text-surface-400 font-bold uppercase tracking-widest mb-0.5 sm:mb-1">Payable Now</p>
                 <p className="text-white font-black text-2xl sm:text-3xl tracking-tight leading-none">
-                   <span className="text-primary-400 mr-0.5">₹</span>{payableNow}
+                  <span className="text-primary-400 mr-0.5">₹</span>{payableNow}
                 </p>
               </div>
               <div className="flex flex-col items-end">
-                 <span className="text-[8px] sm:text-[10px] text-surface-500 font-bold uppercase mb-1">
-                   {paymentType === 'full' ? 'Payment in Full' : `Balance: ₹${totalAmount - advanceAmount}`}
-                 </span>
-                 <div className="bg-green-500/20 text-green-400 text-[8px] sm:text-[9px] font-black px-2 py-0.5 sm:px-3 sm:py-1 rounded-full border border-green-500/30 uppercase tracking-tighter">
-                   Best Price Guarantee
-                 </div>
+                <span className="text-[8px] sm:text-[10px] text-surface-500 font-bold uppercase mb-1">
+                  {paymentType === 'full' ? 'Payment in Full' : `Balance: ₹${totalAmount - advanceAmount}`}
+                </span>
+                <div className="bg-green-500/20 text-green-400 text-[8px] sm:text-[9px] font-black px-2 py-0.5 sm:px-3 sm:py-1 rounded-full border border-green-500/30 uppercase tracking-tighter">
+                  Best Price Guarantee
+                </div>
               </div>
             </div>
           </div>
@@ -328,15 +325,15 @@ const BookingModal: React.FC<BookingModalProps> = ({
             <button onClick={resetAndClose} className="btn-secondary flex-1 py-3 sm:py-4 font-black uppercase tracking-widest text-[10px] sm:text-xs">
               Change
             </button>
-            <button 
-              onClick={handleLockAndPay} 
+            <button
+              onClick={handleLockAndPay}
               disabled={step !== 'confirm'}
               className="btn-primary flex-[2] py-3 sm:py-4 font-black uppercase tracking-widest text-[10px] sm:text-xs shadow-xl shadow-primary-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {step === 'confirm' ? 'Confirm & Pay' : 'Processing...'}
             </button>
           </div>
-          
+
           <p className="text-center text-[9px] sm:text-[10px] text-surface-500 font-medium pb-2 sm:pb-0">
             Slots are held for 5 minutes once confirmed.
           </p>
@@ -370,13 +367,13 @@ const BookingModal: React.FC<BookingModalProps> = ({
           <p className="text-surface-400 text-sm mb-8 leading-relaxed">
             Razorpay API keys are not configured. You can complete this transaction in <span className="text-blue-400 font-bold">Demo Mode</span> to test the application flow.
           </p>
-          <button 
+          <button
             onClick={handleDemoPayment}
             className="w-full btn-primary py-5 bg-blue-600 hover:bg-blue-500 shadow-2xl shadow-blue-500/40 font-black uppercase tracking-widest"
           >
             Pay {formatCurrency(payableNow)} (Demo)
           </button>
-          <button 
+          <button
             onClick={resetAndClose}
             className="mt-6 text-surface-500 hover:text-white text-xs font-black uppercase tracking-widest transition-colors"
           >
@@ -389,9 +386,9 @@ const BookingModal: React.FC<BookingModalProps> = ({
         <div className="flex flex-col items-center py-16 animate-fade-in text-center">
           <LoadingSpinner size="lg" text="Secure Checkout in Progress..." />
           <div className="mt-8 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20">
-             <p className="text-amber-400 text-xs font-black uppercase tracking-widest">
-                Action Required: Payment Window Open
-             </p>
+            <p className="text-amber-400 text-xs font-black uppercase tracking-widest">
+              Action Required: Payment Window Open
+            </p>
           </div>
           <p className="text-surface-500 text-[10px] mt-4 font-bold uppercase tracking-tighter">
             Expires in {formatCountdown(countdown)}
@@ -404,7 +401,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
           <div className="relative">
             <LoadingSpinner size="lg" />
             <div className="absolute inset-0 flex items-center justify-center">
-               <MdPayment className="text-primary-500/30" size={24} />
+              <MdPayment className="text-primary-500/30" size={24} />
             </div>
           </div>
           <h3 className="text-xl font-display font-black text-white mt-8 uppercase tracking-widest">Verifying Payment</h3>
@@ -416,21 +413,21 @@ const BookingModal: React.FC<BookingModalProps> = ({
         <div className="flex flex-col items-center py-14 animate-scale-in text-center px-6">
           <div className="relative mb-8">
             <div className="h-28 w-40 rounded-3xl bg-green-500/10 flex items-center justify-center shadow-[0_0_60px_rgba(34,197,94,0.2)] border border-green-500/20 p-2">
-              <img src="/images/logo.png" alt="VSY Logo" className="w-full h-full object-contain" />
+              <img src="/images/logo.png" alt="Yodha Nets Logo" className="w-full h-full object-contain" />
             </div>
             <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shadow-lg border-4 border-surface-950">
-               <MdCheckCircle className="text-white" size={24} />
+              <MdCheckCircle className="text-white" size={24} />
             </div>
           </div>
           <h3 className="text-3xl font-display font-black text-green-400 mb-2 uppercase tracking-tighter">Booking Confirmed!</h3>
           <p className="text-white font-bold text-lg mb-1">Get ready for your match!</p>
           <p className="text-surface-500 text-sm max-w-[240px]">
-            Your reservation for <span className="text-white font-bold">Arena {turfId === 'A' ? '1' : '2'}</span> on <span className="text-white font-bold">{formatDate(date)}</span> is successful.
+            Your reservation for <span className="text-white font-bold">{turfId === 'A' ? 'Pickleball 1' : 'Pickleball 2'}</span> on <span className="text-white font-bold">{formatDate(date)}</span> is successful.
           </p>
-          
+
           <div className="mt-8 w-full p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center gap-2">
-             <span className="text-[10px] text-surface-500 font-black uppercase tracking-widest">Status:</span>
-             <span className="text-[10px] text-green-400 font-black uppercase tracking-widest">Active reservation</span>
+            <span className="text-[10px] text-surface-500 font-black uppercase tracking-widest">Status:</span>
+            <span className="text-[10px] text-green-400 font-black uppercase tracking-widest">Active reservation</span>
           </div>
         </div>
       )}

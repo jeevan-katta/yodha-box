@@ -32,7 +32,7 @@ const COLORS = ['#22c55e', '#16a34a', '#4ade80', '#ffffff', '#86efac', '#ffd700'
 
 const CricketLoginAnimation: React.FC<Props> = ({
   onComplete,
-  brandName = 'VSY BOX CRICKET',
+  brandName = 'YODHA NETS',
 }) => {
   const [phase, setPhase] = useState(0);
   const [particles, setParticles] = useState<Particle[]>([]);
@@ -185,12 +185,12 @@ const CricketLoginAnimation: React.FC<Props> = ({
             style={{
               transform:
                 phase === 0 ? 'translate(540px, 150px)' :
-                phase === 1 ? 'translate(540px, 145px)' :
-                phase === 2 ? 'translate(255px, 148px)' :
-                phase >= 3 ? 'translate(-60px, -50px)' : '',
+                  phase === 1 ? 'translate(540px, 145px)' :
+                    phase === 2 ? 'translate(255px, 148px)' :
+                      phase >= 3 ? 'translate(-60px, -50px)' : '',
               transition:
                 phase === 2 ? 'transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94)' :
-                phase === 3 ? 'transform 0.25s cubic-bezier(0.55,0,1,0.45)' : 'none',
+                  phase === 3 ? 'transform 0.25s cubic-bezier(0.55,0,1,0.45)' : 'none',
             }}
           >
             {/* Ball glow */}
@@ -225,14 +225,14 @@ const CricketLoginAnimation: React.FC<Props> = ({
             style={{
               transformOrigin: '220px 260px',
               transform:
-                phase < 2  ? 'rotate(65deg) translate(0px, 80px) scale(0.7)' :
-                phase === 2 ? 'rotate(40deg) translate(0px, 0px) scale(1)' :
-                phase === 3 ? 'rotate(-30deg) scale(1.05)' :
-                phase >= 4  ? 'rotate(-80deg) translate(-40px, 40px) scale(0.8)' : '',
+                phase < 2 ? 'rotate(65deg) translate(0px, 80px) scale(0.7)' :
+                  phase === 2 ? 'rotate(40deg) translate(0px, 0px) scale(1)' :
+                    phase === 3 ? 'rotate(-30deg) scale(1.05)' :
+                      phase >= 4 ? 'rotate(-80deg) translate(-40px, 40px) scale(0.8)' : '',
               transition:
                 phase === 2 ? 'transform 0.9s cubic-bezier(0.34,1.56,0.64,1)' :
-                phase === 3 ? 'transform 0.18s cubic-bezier(0.55,0,1,0.45)' :
-                phase >= 4  ? 'transform 0.5s ease-in' : 'none',
+                  phase === 3 ? 'transform 0.18s cubic-bezier(0.55,0,1,0.45)' :
+                    phase >= 4 ? 'transform 0.5s ease-in' : 'none',
               opacity: phase >= 1 ? 1 : 0,
             }}
           >
@@ -242,7 +242,7 @@ const CricketLoginAnimation: React.FC<Props> = ({
             <rect x={217} y={155} width={3} height={56} rx={3}
               fill="rgba(255,255,255,0.2)" />
             {/* Grip wrap */}
-            {[0,8,16,24,32,40,48].map((y, i) => (
+            {[0, 8, 16, 24, 32, 40, 48].map((y, i) => (
               <line
                 key={i}
                 x1={215} y1={160 + y}
@@ -274,7 +274,7 @@ const CricketLoginAnimation: React.FC<Props> = ({
             position: 'absolute',
             inset: 0,
             background: 'rgba(255,255,255,0.18)',
-            animation: 'vsyFlash 0.25s ease-out forwards',
+            animation: 'yodhaFlash 0.25s ease-out forwards',
           }}
         />
       )}
@@ -317,13 +317,13 @@ const CricketLoginAnimation: React.FC<Props> = ({
           >
             <img
               src="/images/logo.png"
-              alt="VSY Logo"
+              alt="Yodha Nets Logo"
               style={{
                 width: 110,
                 height: 110,
                 objectFit: 'contain',
                 filter: 'drop-shadow(0 0 20px rgba(34,197,94,0.6))',
-                animation: phase >= 5 ? 'vsyLogoFloat 3s ease-in-out infinite' : 'none',
+                animation: phase >= 5 ? 'yodhaLogoFloat 3s ease-in-out infinite' : 'none',
               }}
             />
           </div>
@@ -390,19 +390,19 @@ const CricketLoginAnimation: React.FC<Props> = ({
 
       {/* ══════════════ KEYFRAME DEFINITIONS ══════════════ */}
       <style>{`
-        @keyframes vsyFlash {
+        @keyframes yodhaFlash {
           0%   { opacity: 1; }
           100% { opacity: 0; }
         }
-        @keyframes vsyShockwave {
+        @keyframes yodhaShockwave {
           0%   { transform: translate(-50%, -50%) scale(0);   opacity: 0.8; }
           100% { transform: translate(-50%, -50%) scale(4.5); opacity: 0; }
         }
-        @keyframes vsyLogoFloat {
+        @keyframes yodhaLogoFloat {
           0%, 100% { transform: translateY(0px);  }
           50%       { transform: translateY(-8px); }
         }
-        @keyframes vsyRingPulse {
+        @keyframes yodhaRingPulse {
           0%, 100% { transform: translate(-50%, -50%) scale(1);   opacity: 0.4; }
           50%       { transform: translate(-50%, -50%) scale(1.06); opacity: 0.2; }
         }
@@ -421,7 +421,7 @@ function shockwaveStyle(delay: number): React.CSSProperties {
     height: 120,
     borderRadius: '50%',
     border: '2px solid rgba(34,197,94,0.7)',
-    animation: `vsyShockwave 0.9s cubic-bezier(0.2,0.6,0.4,1) ${delay}s forwards`,
+    animation: `yodhaShockwave 0.9s cubic-bezier(0.2,0.6,0.4,1) ${delay}s forwards`,
     pointerEvents: 'none',
   };
 }
@@ -435,7 +435,7 @@ function glowRing(size: number, color: string, active: boolean): React.CSSProper
     height: size,
     borderRadius: '50%',
     background: color,
-    animation: active ? 'vsyRingPulse 2.5s ease-in-out infinite' : 'none',
+    animation: active ? 'yodhaRingPulse 2.5s ease-in-out infinite' : 'none',
     pointerEvents: 'none',
   };
 }

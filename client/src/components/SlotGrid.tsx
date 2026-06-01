@@ -66,18 +66,17 @@ const SlotGrid: React.FC<SlotGridProps> = ({ slots, turfId, selectedSlotHours, o
     <div>
       {/* Turf Header */}
       <div className="flex items-center gap-3 mb-4">
-        <div className={`w-3 h-3 rounded-full ${
-          turfId === 'A' ? 'bg-primary-500' : 
-          turfId === 'B' ? 'bg-accent-500' : 
-          turfId === 'D' ? 'bg-amber-500' : 'bg-white/30'
-        }`} />
+        <div className={`w-3 h-3 rounded-full ${turfId === 'A' ? 'bg-primary-500' :
+            turfId === 'B' ? 'bg-accent-500' :
+              turfId === 'D' ? 'bg-amber-500' : 'bg-white/30'
+          }`} />
         <h3 className="font-display font-bold text-lg text-white">
-          {turfId === 'A' ? 'Arena 1' : 
-           turfId === 'B' ? 'Arena 2' : 
-           turfId === 'D' ? 'Open Ground' : turfId}
+          {turfId === 'A' ? 'Pickleball 1' :
+            turfId === 'B' ? 'Pickleball 2' :
+              turfId === 'D' ? 'Box Cricket' : turfId}
         </h3>
         <span className="text-xs text-surface-400 bg-white/5 px-2 py-1 rounded-full">
-          {turfId === 'D' ? 'Spacious Playing Field' : '360° Box Cricket'}
+          {turfId === 'D' ? 'Spacious Box Cricket Turf' : 'Premium Pickleball Court'}
         </span>
       </div>
 
@@ -116,10 +115,10 @@ const SlotGrid: React.FC<SlotGridProps> = ({ slots, turfId, selectedSlotHours, o
               disabled={slot.status !== 'available'}
               className={`relative flex flex-col items-center justify-center gap-1 p-3 rounded-xl border
                 transition-all duration-300 min-h-[106px]
-                ${slot.status === 'available' 
-                  ? isSelected 
-                    ? 'bg-primary-500/20 border-primary-500 ring-2 ring-primary-500/20 scale-[1.05] z-10 shadow-lg shadow-primary-500/20' 
-                    : 'slot-available hover:scale-[1.03]' 
+                ${slot.status === 'available'
+                  ? isSelected
+                    ? 'bg-primary-500/20 border-primary-500 ring-2 ring-primary-500/20 scale-[1.05] z-10 shadow-lg shadow-primary-500/20'
+                    : 'slot-available hover:scale-[1.03]'
                   : ''}
                 ${slot.status === 'booked' ? 'slot-booked' : ''}
                 ${slot.status === 'pending' ? 'bg-orange-500/10 border-orange-500/30 ring-1 ring-orange-500/20' : ''}
@@ -142,9 +141,8 @@ const SlotGrid: React.FC<SlotGridProps> = ({ slots, turfId, selectedSlotHours, o
               </span>
 
               {/* Price */}
-              <span className={`text-sm font-black mt-1 ${
-                isSelected ? 'text-white' : slot.status === 'available' ? 'text-green-300' : 'opacity-50'
-              }`}>
+              <span className={`text-sm font-black mt-1 ${isSelected ? 'text-white' : slot.status === 'available' ? 'text-green-300' : 'opacity-50'
+                }`}>
                 {formatCurrency(slot.price)}
               </span>
 
@@ -152,7 +150,7 @@ const SlotGrid: React.FC<SlotGridProps> = ({ slots, turfId, selectedSlotHours, o
               <span className={`text-[9px] uppercase tracking-wider font-bold mt-1 ${isSelected ? 'text-primary-400' : 'opacity-70'}`}>
                 {getStatusLabel(slot)}
               </span>
-              
+
               {isSelected && (
                 <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-primary-500 text-[8px] text-white px-2 py-0.5 rounded-full font-black uppercase tracking-tighter shadow-sm">
                   Picked

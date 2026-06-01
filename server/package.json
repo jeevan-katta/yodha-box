@@ -1,7 +1,7 @@
 {
-  "name": "vsy-box-cricket-pro-server",
+  "name": "yodha-nets-pro-server",
   "version": "1.0.0",
-  "description": "VSY Box Cricket Pro - Backend API Server",
+  "description": "Yodha Nets Pro - Backend API Server",
   "engines": {
     "node": ">=18.0.0"
   },

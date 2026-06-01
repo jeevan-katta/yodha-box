@@ -48,7 +48,7 @@ const AdminLoginPage: React.FC = () => {
       {isAnimating && (
         <CricketLoginAnimation 
           onComplete={() => navigate('/admin')} 
-          brandName="VSY PRO ADMIN" 
+          brandName="YODHA NETS ADMIN" 
         />
       )}
       {/* Background */}
@@ -62,7 +62,7 @@ const AdminLoginPage: React.FC = () => {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="h-20 sm:h-24 w-32 sm:w-40 rounded-2xl overflow-hidden bg-white/5 p-2 mx-auto mb-4 border border-white/5">
-              <img src="/images/logo.png" alt="VSY Logo" className="w-full h-full object-contain" />
+              <img src="/images/logo.png" alt="Yodha Nets Logo" className="w-full h-full object-contain" />
             </div>
           </div>
 

@@ -13,8 +13,8 @@ export const getSlots = async (req: Request, res: Response): Promise<void> => {
   try {
     const { turfId, date } = req.params;
 
-    if (!turfId || !['A', 'B', 'D'].includes(turfId)) {
-      res.status(400).json({ success: false, message: 'Invalid turf ID. Must be A, B or D' });
+    if (!turfId || !['A', 'B', 'C', 'D'].includes(turfId)) {
+      res.status(400).json({ success: false, message: 'Invalid turf ID. Must be A, B, C or D' });
       return;
     }
 
@@ -53,7 +53,7 @@ export const lockSlotHandler = async (req: Request, res: Response): Promise<void
       return;
     }
 
-    if (!turfId || !['A', 'B', 'D'].includes(turfId)) {
+    if (!turfId || !['A', 'B', 'C', 'D'].includes(turfId)) {
       res.status(400).json({ success: false, message: 'Invalid turf ID' });
       return;
     }

@@ -1,0 +1,6 @@
+# Robots.txt for Yodha Nets - https://yodha-box.vercel.app/
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://yodha-box.vercel.app/sitemap.xml

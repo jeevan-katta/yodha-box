@@ -76,21 +76,42 @@ const HomePage: React.FC = () => {
       <main className="flex-1 pt-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full animate-fade-in space-y-8">
         
         {/* Welcome Section */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 glass-card border-white/5 bg-gradient-to-r from-white/[0.03] to-transparent rounded-3xl relative overflow-hidden group">
-          <div className="absolute right-0 bottom-0 opacity-[0.02] translate-y-6 translate-x-6 text-[150px] font-black pointer-events-none text-primary-500">VSY</div>
-          <div className="space-y-1">
-            <p className="text-xs font-black uppercase tracking-widest text-primary-400">{greeting},</p>
-            <h1 className="text-3xl font-display font-black text-white truncate max-w-[280px] sm:max-w-md">
-              {user?.name || 'Player'} 👋
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 p-6 sm:p-8 rounded-3xl relative overflow-hidden border border-white/15 bg-gradient-to-br from-surface-900 via-surface-950 to-surface-950 shadow-2xl shadow-black/40 group">
+          
+          {/* Ambient Glows */}
+          <div className="absolute right-0 top-0 w-48 h-48 bg-primary-500/10 rounded-full blur-3xl opacity-60 pointer-events-none transition-all duration-700 group-hover:bg-primary-500/15" />
+          <div className="absolute left-0 bottom-0 w-36 h-36 bg-accent-500/5 rounded-full blur-2xl opacity-40 pointer-events-none" />
+          
+          {/* Background Branding Watermark */}
+          <div className="absolute right-4 bottom-[-10px] opacity-[0.02] sm:opacity-[0.03] select-none text-[100px] sm:text-[140px] font-black tracking-tighter pointer-events-none text-white transition-all duration-500 group-hover:scale-105">
+            YODHA
+          </div>
+
+          <div className="space-y-2 relative z-10">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="px-2.5 py-0.5 rounded-md bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[8px] sm:text-[9px] font-black uppercase tracking-widest">
+                Arena Member
+              </span>
+              <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-surface-500 font-display">
+                {greeting}
+              </span>
+            </div>
+            
+            <h1 className="text-3xl sm:text-4xl font-display font-black text-white leading-tight capitalize truncate max-w-[280px] sm:max-w-md">
+              {user?.name || 'Player'}
             </h1>
-            <p className="text-xs text-surface-400 font-medium">Ready for another champion gaming session? 🏏</p>
+            
+            <p className="text-xs sm:text-sm text-surface-400 font-medium max-w-sm sm:max-w-md leading-relaxed">
+              Welcome back to Safilguda's premier athletic arena. Your next victory starts here.
+            </p>
           </div>
           
           <button 
             onClick={() => navigate('/activities')}
-            className="w-full sm:w-auto btn-primary px-6 py-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm shadow-xl shadow-primary-500/10 whitespace-nowrap active:scale-[0.98]"
+            className="w-full sm:w-auto relative z-10 bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-400 hover:to-accent-400 text-white font-black px-8 py-4 rounded-2xl flex items-center justify-center gap-2.5 text-sm shadow-xl shadow-primary-500/20 hover:shadow-primary-500/35 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] whitespace-nowrap"
           >
-            Book Slots Now <MdArrowForward size={18} />
+            <span>Book Slots Now</span> 
+            <MdArrowForward size={18} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
 
@@ -99,58 +120,30 @@ const HomePage: React.FC = () => {
           <h2 className="text-xs font-bold text-surface-400 uppercase tracking-widest pl-1">Quick Arena Booking</h2>
           <div className="flex overflow-x-auto gap-3.5 pb-3 -mx-4 px-4 scrollbar-none snap-x snap-mandatory">
             
-            {/* Arena 1 CTA */}
+            {/* Open Ground CTA */}
             <div 
-              onClick={() => handleBookArena('A')}
+              onClick={() => handleBookArena('D' as any)}
               className="flex-shrink-0 w-[60%] sm:w-56 glass-card-hover border-white/5 p-3 rounded-2xl flex flex-col group cursor-pointer relative overflow-hidden snap-start"
             >
               <div className="relative h-24 w-full overflow-hidden rounded-xl">
                 <img 
-                  src="/images/box_6.jpg.PNG" 
-                  alt="Arena 1 Preview" 
+                  src="/images/box_cricket.png" 
+                  alt="Box Cricket Preview" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/20 to-transparent" />
                 <div className="absolute top-2 left-2">
-                  <span className="px-2 py-0.5 rounded-md bg-primary-500 text-[8px] sm:text-[9px] font-black uppercase tracking-wider text-white">
-                    Arena 1
+                  <span className="px-2 py-0.5 rounded-md bg-emerald-600 text-[8px] sm:text-[9px] font-black uppercase tracking-wider text-white">
+                    Box Cricket
                   </span>
                 </div>
               </div>
               <div className="pt-2 px-1 text-left">
-                <h3 className="text-xs sm:text-sm font-display font-black text-white group-hover:text-primary-400 transition-colors truncate">
-                  Premium Box
+                <h3 className="text-xs sm:text-sm font-display font-black text-white group-hover:text-emerald-400 transition-colors truncate">
+                  Box Cricket
                 </h3>
                 <p className="text-[9px] text-surface-500 font-bold uppercase tracking-wider mt-0.5">
-                  Book Turf A
-                </p>
-              </div>
-            </div>
-
-            {/* Arena 2 CTA */}
-            <div 
-              onClick={() => handleBookArena('B')}
-              className="flex-shrink-0 w-[60%] sm:w-56 glass-card-hover border-white/5 p-3 rounded-2xl flex flex-col group cursor-pointer relative overflow-hidden snap-start"
-            >
-              <div className="relative h-24 w-full overflow-hidden rounded-xl">
-                <img 
-                  src="/images/box_9.jpg.PNG" 
-                  alt="Arena 2 Preview" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/20 to-transparent" />
-                <div className="absolute top-2 left-2">
-                  <span className="px-2 py-0.5 rounded-md bg-accent-500 text-[8px] sm:text-[9px] font-black uppercase tracking-wider text-white">
-                    Arena 2
-                  </span>
-                </div>
-              </div>
-              <div className="pt-2 px-1 text-left">
-                <h3 className="text-xs sm:text-sm font-display font-black text-white group-hover:text-accent-400 transition-colors truncate">
-                  Championship Box
-                </h3>
-                <p className="text-[9px] text-surface-500 font-bold uppercase tracking-wider mt-0.5">
-                  Book Turf B
+                  Book Box Cricket
                 </p>
               </div>
             </div>
@@ -162,7 +155,7 @@ const HomePage: React.FC = () => {
             >
               <div className="relative h-24 w-full overflow-hidden rounded-xl">
                 <img 
-                  src="/images/box_10.jpg.PNG" 
+                  src="/images/bowling_machine.png" 
                   alt="Bowling Net Preview" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -183,30 +176,58 @@ const HomePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Open Ground CTA */}
+            {/* Arena 1 CTA */}
             <div 
-              onClick={() => handleBookArena('D' as any)}
+              onClick={() => handleBookArena('A')}
               className="flex-shrink-0 w-[60%] sm:w-56 glass-card-hover border-white/5 p-3 rounded-2xl flex flex-col group cursor-pointer relative overflow-hidden snap-start"
             >
               <div className="relative h-24 w-full overflow-hidden rounded-xl">
                 <img 
-                  src="/images/hero_turf.png" 
-                  alt="Open Ground Preview" 
+                  src="/images/pickleball.png" 
+                  alt="Pickleball 1 Preview" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/20 to-transparent" />
                 <div className="absolute top-2 left-2">
-                  <span className="px-2 py-0.5 rounded-md bg-emerald-600 text-[8px] sm:text-[9px] font-black uppercase tracking-wider text-white">
-                    Open Field
+                  <span className="px-2 py-0.5 rounded-md bg-primary-500 text-[8px] sm:text-[9px] font-black uppercase tracking-wider text-white">
+                    Pickleball 1
                   </span>
                 </div>
               </div>
               <div className="pt-2 px-1 text-left">
-                <h3 className="text-xs sm:text-sm font-display font-black text-white group-hover:text-emerald-400 transition-colors truncate">
-                  Open Ground
+                <h3 className="text-xs sm:text-sm font-display font-black text-white group-hover:text-primary-400 transition-colors truncate">
+                  Pickleball 1
                 </h3>
                 <p className="text-[9px] text-surface-500 font-bold uppercase tracking-wider mt-0.5">
-                  Book Turf D
+                  Book Pickleball 1
+                </p>
+              </div>
+            </div>
+
+            {/* Arena 2 CTA */}
+            <div 
+              onClick={() => handleBookArena('B')}
+              className="flex-shrink-0 w-[60%] sm:w-56 glass-card-hover border-white/5 p-3 rounded-2xl flex flex-col group cursor-pointer relative overflow-hidden snap-start"
+            >
+              <div className="relative h-24 w-full overflow-hidden rounded-xl">
+                <img 
+                  src="/images/pickleball.png" 
+                  alt="Pickleball 2 Preview" 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/20 to-transparent" />
+                <div className="absolute top-2 left-2">
+                  <span className="px-2 py-0.5 rounded-md bg-accent-500 text-[8px] sm:text-[9px] font-black uppercase tracking-wider text-white">
+                    Pickleball 2
+                  </span>
+                </div>
+              </div>
+              <div className="pt-2 px-1 text-left">
+                <h3 className="text-xs sm:text-sm font-display font-black text-white group-hover:text-accent-400 transition-colors truncate">
+                  Pickleball 2
+                </h3>
+                <p className="text-[9px] text-surface-500 font-bold uppercase tracking-wider mt-0.5">
+                  Book Pickleball 2
                 </p>
               </div>
             </div>
@@ -246,7 +267,7 @@ const HomePage: React.FC = () => {
                       <MdCheckCircle size={10} /> Confirmed
                     </span>
                     <span className="text-[10px] text-surface-500 font-bold uppercase tracking-wider">
-                      Arena {upcomingBooking.turfId === 'A' ? '1' : '2'}
+                      {upcomingBooking.turfId === 'A' ? 'Pickleball 1' : upcomingBooking.turfId === 'B' ? 'Pickleball 2' : upcomingBooking.turfId === 'D' ? 'Box Cricket' : 'Bowling Net'}
                     </span>
                   </div>
                   <h4 className="text-white text-base font-black tracking-tight truncate">
@@ -297,15 +318,15 @@ const HomePage: React.FC = () => {
                 <MdLocationOn size={20} />
               </div>
               <div>
-                <h4 className="text-sm font-black text-white tracking-tight">VSY Box Cricket</h4>
+                <h4 className="text-sm font-black text-white tracking-tight">Yodha Nets Safilguda</h4>
                 <p className="text-[11px] text-surface-400 font-medium leading-relaxed mt-1">
-                  Nadergul, Hyderabad. Village Road, Besides Sanjeevani Park.
+                  Plot No. 162, Road No. 3, Near Jain Mandir, East Anandbagh, Safilguda, Secunderabad 500047.
                 </p>
               </div>
             </div>
             
             <a
-              href="https://maps.app.goo.gl/LM4hCLcgC6bb4EcC8"
+              href="https://maps.app.goo.gl/BCCghi3hbdX2P5YZ9?g_st=ic"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-5 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-primary-400 hover:bg-white/10 transition-all text-center cursor-pointer"
@@ -332,7 +353,7 @@ const HomePage: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-2 mt-5">
               <a
-                href="wa.me/919502154297"
+                href="https://wa.me/919133101999"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-green-500/10 border border-green-500/20 text-[10px] font-black uppercase tracking-widest text-green-400 hover:bg-green-500/20 transition-all text-center cursor-pointer"
@@ -340,7 +361,7 @@ const HomePage: React.FC = () => {
                 WhatsApp
               </a>
               <a
-                href="tel:+919502154297"
+                href="tel:+919133101999"
                 className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-surface-300 hover:bg-white/10 transition-all text-center cursor-pointer"
               >
                 <MdPhone size={14} /> Call Support

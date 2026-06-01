@@ -1,5 +1,6 @@
 import { Admin } from '../models/Admin';
 import { PricingRule } from '../models/PricingRule';
+import { TurfId } from '../types';
 
 /**
  * Seeds a default admin user if none exists.
@@ -9,11 +10,11 @@ export const seedAdmin = async () => {
     const adminCount = await Admin.countDocuments();
     if (adminCount === 0) {
       await Admin.create({
-        name: 'VSY Admin',
-        email: process.env.ADMIN_EMAIL || 'admin@vsyboxcricket.com',
+        name: 'Yodha Admin',
+        email: process.env.ADMIN_EMAIL || 'admin@yodhanets.com',
         password: process.env.ADMIN_PASSWORD || 'adminpassword123',
       });
-      console.log(`✅ Default admin seeded: ${process.env.ADMIN_EMAIL || 'admin@vsyboxcricket.com'}`);
+      console.log(`✅ Default admin seeded: ${process.env.ADMIN_EMAIL || 'admin@yodhanets.com'}`);
     }
     
     // Also seed default pricing if empty or outdated

@@ -98,7 +98,7 @@ const BowlingBookingPage: React.FC = () => {
         key: orderData.razorpayKeyId,
         amount: orderData.amount * 100,
         currency: orderData.currency,
-        name: 'VSY Box Cricket Pro',
+        name: 'Yodha Nets',
         description: `Bowling Net | ${formatDate(selectedDate)} | ${selectedSession.name} (${overs} Overs)`,
         order_id: orderData.orderId,
         handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {

@@ -7,7 +7,7 @@ const blockedSlotSchema = new Schema<BlockedSlotDocument>(
   {
     turfId: {
       type: String,
-      enum: ['A', 'B', 'D'] as TurfId[],
+      enum: ['A', 'B', 'C', 'D'] as TurfId[],
       required: true,
     },
     date: {

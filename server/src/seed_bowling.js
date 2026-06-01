@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/vsy-box-cricket';
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/yodha-nets';
 
 const bowlingPackageSchema = new mongoose.Schema({
   overs: { type: Number, enum: [5, 10, 15, 20], required: true, unique: true },

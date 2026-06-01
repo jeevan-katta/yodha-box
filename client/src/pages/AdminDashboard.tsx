@@ -75,10 +75,10 @@ const groupBookingsList = (bookingsList: any[]) => {
 };
 
 const getTurfName = (turfId: string) => {
-  if (turfId === 'A') return 'Arena 1';
-  if (turfId === 'B') return 'Arena 2';
+  if (turfId === 'A') return 'Pickleball 1';
+  if (turfId === 'B') return 'Pickleball 2';
   if (turfId === 'C') return 'Bowling Net';
-  if (turfId === 'D') return 'Open Ground';
+  if (turfId === 'D') return 'Box Cricket';
   return turfId;
 };
 
@@ -272,12 +272,25 @@ const AdminDashboard: React.FC = () => {
     setSelectedAdminSlots([]);
     setLoadingSlots(true);
     try {
-      const [slotsRes, blockedRes] = await Promise.all([
-        getSlots(selectedTurf, selectedDate),
-        getBlockedSlots(selectedDate, selectedTurf),
-      ]);
-      if (slotsRes.success && slotsRes.data) setSlots(slotsRes.data.slots);
-      if (blockedRes.success && blockedRes.data) setBlockedSlots(blockedRes.data);
+      if (selectedTurf === 'C') {
+        try {
+          const bowlingRes = await getAdminBowlingPackages();
+          if (bowlingRes && bowlingRes.success && bowlingRes.data) {
+            setBowlingPackages(bowlingRes.data);
+          }
+        } catch (err) {
+          console.warn('Failed to load bowling packages in fetchSlots:', err);
+        }
+        setSlots([]);
+        setBlockedSlots([]);
+      } else {
+        const [slotsRes, blockedRes] = await Promise.all([
+          getSlots(selectedTurf, selectedDate),
+          getBlockedSlots(selectedDate, selectedTurf),
+        ]);
+        if (slotsRes && slotsRes.success && slotsRes.data) setSlots(slotsRes.data.slots);
+        if (blockedRes && blockedRes.success && blockedRes.data) setBlockedSlots(blockedRes.data);
+      }
     } catch {
       toast.error('Failed to load slots');
     } finally {
@@ -311,6 +324,7 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => { if (activeTab === 'bookings') fetchBookings(); }, [activeTab, fetchBookings]);
   useEffect(() => { if (activeTab === 'slots') fetchSlots(); }, [activeTab, fetchSlots]);
   useEffect(() => { if (activeTab === 'pricing') fetchPricing(); }, [activeTab, fetchPricing]);
+  useEffect(() => { fetchPricing(); }, [fetchPricing]);
 
   // Silently migrate any old walk-in BlockedSlots to real Bookings on first load
   useEffect(() => {
@@ -498,103 +512,6 @@ const AdminDashboard: React.FC = () => {
           <h1 className="text-2xl sm:text-3xl font-display font-black text-white">
             Admin <span className="gradient-text">Dashboard</span>
           </h1>
-
-          {/* Scrolling Marquee for Bookings */}
-          {stats && (
-            <div className="w-full overflow-hidden bg-white/5 border border-white/10 rounded-lg py-2 flex flex-col justify-center gap-1.5 relative h-16 sm:h-16 shadow-inner">
-
-              {/* CURRENTLY RUNNING Ticker */}
-              <div className="w-full relative h-[1.2rem] sm:h-[1.4rem]">
-                <div className="absolute whitespace-nowrap animate-shimmer flex items-center h-full text-xs sm:text-sm font-bold text-surface-300" style={{ animationDuration: '16s' }}>
-                  {(() => {
-                    const today = getTodayStr();
-                    const currentHour = new Date().getHours();
-                    const running = [
-                      ...(stats.upcomingBookings || []),
-                      ...(stats.recentBookings || [])
-                    ].filter(b => b.date === today && b.startHour === currentHour && b.status === 'confirmed');
-
-                    const uniqueRunning = Array.from(new Map(running.map(b => [b._id, b])).values());
-
-                    return (
-                      <div className="flex gap-8">
-                        {['A', 'B'].map(turf => {
-                          const match = uniqueRunning.find(b => b.turfId === turf);
-                          if (match) {
-                            const u = typeof match.userId === 'object' ? match.userId : null;
-                            const nameOrPhone = u ? `${u.name || ''} ${u.phone || ''}`.trim() || 'Walk-in' : 'Reserved';
-                            return (
-                              <span key={turf} className="text-green-400">
-                                🟢 CURRENTLY RUNNING: Arena {match.turfId === 'A' ? '1' : '2'} | Customer: {nameOrPhone} | {formatDate(match.date)} | {formatHour(match.startHour)} to {formatHour(match.startHour + 1)}
-                              </span>
-                            );
-                          }
-                          return (
-                            <span key={turf} className="text-surface-500">
-                              🏏 Arena {turf === 'A' ? '1' : '2'}: Currently Available
-                            </span>
-                          );
-                        })}
-                      </div>
-                    );
-                  })()}
-                </div>
-              </div>
-
-              {/* UPCOMING NEXT HOUR Ticker */}
-              <div className="w-full relative h-[1.2rem] sm:h-[1.4rem]">
-                <div className="absolute whitespace-nowrap animate-shimmer flex items-center h-full text-[11px] sm:text-[13px] font-bold text-surface-400" style={{ animationDuration: '22s', animationDelay: '-8s' }}>
-                  {(() => {
-                    let d = new Date();
-                    d.setHours(d.getHours() + 1);
-                    const nextYear = d.getFullYear();
-                    const nextMonth = String(d.getMonth() + 1).padStart(2, '0');
-                    const nextDay = String(d.getDate()).padStart(2, '0');
-                    const nextDs = `${nextYear}-${nextMonth}-${nextDay}`;
-                    const searchHour = d.getHours();
-
-                    const nextBookings = [
-                      ...(stats.upcomingBookings || [])
-                    ].filter(b => b.date === nextDs && b.startHour === searchHour && b.status === 'confirmed');
-
-                    const uniqueNext = Array.from(new Map(nextBookings.map(b => [b._id, b])).values());
-
-                    return (
-                      <div className="flex gap-8">
-                        {['A', 'B'].map(turf => {
-                          const match = uniqueNext.find(b => b.turfId === turf);
-                          if (match) {
-                            const u = typeof match.userId === 'object' ? match.userId : null;
-                            const nameOrPhone = u ? `${u.name || ''} ${u.phone || ''}`.trim() || 'Walk-in' : 'Reserved';
-                            return (
-                              <span key={turf} className="text-cyan-400">
-                                ⏩ NEXT HOUR: Arena {match.turfId === 'A' ? '1' : '2'} | Customer: {nameOrPhone} | {formatHour(match.startHour)} to {formatHour(match.startHour + 1)}
-                              </span>
-                            );
-                          }
-                          return (
-                            <span key={turf} className="text-surface-600">
-                              ⏩ Arena {turf === 'A' ? '1' : '2'}: Next slot is empty / available!
-                            </span>
-                          );
-                        })}
-                      </div>
-                    );
-                  })()}
-                </div>
-              </div>
-
-              <style>{`
-                @keyframes scroll-left {
-                  0% { transform: translateX(100vw); }
-                  100% { transform: translateX(-100%); }
-                }
-                .animate-shimmer {
-                  animation: scroll-left linear infinite;
-                }
-              `}</style>
-            </div>
-          )}
         </div>
 
         {/* Tabs - scrollable on mobile */}
@@ -763,10 +680,10 @@ const AdminDashboard: React.FC = () => {
                   {[
                     { label: 'Total Users', value: stats.totalUsers ?? 0, icon: <MdPeople size={24} />, color: 'purple', sub: 'Registered' },
                     { label: 'Total Bookings', value: stats.totalBookings ?? 0, icon: <MdCheckCircle size={24} />, color: 'primary', sub: 'Across all time' },
-                    { label: 'Arena 1 Income', value: (stats.revenueByTurf ?? []).find(t => t._id === 'A')?.total ?? 0, icon: <MdSportsCricket size={24} />, color: 'primary', sub: `${(stats.revenueByTurf ?? []).find(t => t._id === 'A')?.count ?? 0} Games` },
-                    { label: 'Arena 2 Income', value: (stats.revenueByTurf ?? []).find(t => t._id === 'B')?.total ?? 0, icon: <MdSportsCricket size={24} />, color: 'accent', sub: `${(stats.revenueByTurf ?? []).find(t => t._id === 'B')?.count ?? 0} Games` },
+                    { label: 'Pickleball 1 Income', value: (stats.revenueByTurf ?? []).find(t => t._id === 'A')?.total ?? 0, icon: <MdSportsCricket size={24} />, color: 'primary', sub: `${(stats.revenueByTurf ?? []).find(t => t._id === 'A')?.count ?? 0} Games` },
+                    { label: 'Pickleball 2 Income', value: (stats.revenueByTurf ?? []).find(t => t._id === 'B')?.total ?? 0, icon: <MdSportsCricket size={24} />, color: 'accent', sub: `${(stats.revenueByTurf ?? []).find(t => t._id === 'B')?.count ?? 0} Games` },
                     { label: 'Bowling Net Income', value: (stats.revenueByTurf ?? []).find(t => t._id === 'C')?.total ?? 0, icon: <MdMemory size={24} />, color: 'purple', sub: `${(stats.revenueByTurf ?? []).find(t => t._id === 'C')?.count ?? 0} Bookings` },
-                    { label: 'Open Ground Income', value: (stats.revenueByTurf ?? []).find(t => t._id === 'D')?.total ?? 0, icon: <MdDirectionsRun size={24} />, color: 'amber', sub: `${(stats.revenueByTurf ?? []).find(t => t._id === 'D')?.count ?? 0} Bookings` },
+                    { label: 'Box Cricket Income', value: (stats.revenueByTurf ?? []).find(t => t._id === 'D')?.total ?? 0, icon: <MdDirectionsRun size={24} />, color: 'amber', sub: `${(stats.revenueByTurf ?? []).find(t => t._id === 'D')?.count ?? 0} Bookings` },
                     { label: 'Ball Revenue', value: stats.totalBallRevenue ?? 0, icon: <MdAttachMoney size={24} />, color: 'amber', sub: 'Equipment' },
                   ].map((stat, idx) => (
                     <div key={idx} className={`group relative overflow-hidden rounded-3xl p-6 border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300`}>
@@ -924,11 +841,11 @@ const AdminDashboard: React.FC = () => {
                         onChange={(e) => { setFilterTurf(e.target.value); setFilterPage(1); }}
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary-500/50"
                       >
-                        <option value="">All Arenas</option>
-                        <option value="A">Arena 1</option>
-                        <option value="B">Arena 2</option>
+                        <option value="">All Activities</option>
+                        <option value="A">Pickleball 1</option>
+                        <option value="B">Pickleball 2</option>
                         <option value="C">Bowling Net</option>
-                        <option value="D">Open Ground</option>
+                        <option value="D">Box Cricket</option>
                       </select>
                     </div>
 
@@ -1196,7 +1113,7 @@ const AdminDashboard: React.FC = () => {
               {(['A', 'B', 'C', 'D'] as TurfId[]).map((t) => (
                 <button key={t} onClick={() => { setSelectedTurf(t); setSelectedAdminSlots([]); }}
                   className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${selectedTurf === t ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30' : 'bg-white/5 text-surface-400 border border-white/5'
-                    }`}>{t === 'A' ? 'Arena 1' : t === 'B' ? 'Arena 2' : t === 'C' ? 'Bowling Machine' : 'Open Ground'}</button>
+                    }`}>{t === 'A' ? 'Pickleball 1' : t === 'B' ? 'Pickleball 2' : t === 'C' ? 'Bowling Machine' : 'Box Cricket'}</button>
               ))}
             </div>
 
@@ -1267,7 +1184,8 @@ const AdminDashboard: React.FC = () => {
                         : 'bg-white/5 border-white/5 hover:border-primary-500/30'
                       }`}>
                       <span className="text-[10px] sm:text-xs font-black text-surface-400 mb-1 sm:mb-2">{formatHour(slot.hour)}</span>
-                      <span className={`text-[9px] sm:text-[10px] font-bold uppercase mb-2 sm:mb-3 ${slot.status === 'available' ? 'text-green-400' : 'text-surface-500'}`}>{slot.status}</span>
+                      <span className={`text-[9px] sm:text-[10px] font-bold uppercase ${slot.status === 'available' ? 'text-green-400' : 'text-surface-500'} mb-1`}>{slot.status}</span>
+                      <span className="text-xs sm:text-sm font-display font-black text-white mb-2 sm:mb-3">{formatCurrency(slot.price)}</span>
                       {slot.status === 'blocked' && (
                         <button onClick={(e) => { e.stopPropagation(); handleUnblockSlot(slot.hour); }} className="text-[9px] sm:text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 sm:py-1 rounded hover:bg-green-500/30 transition z-10 relative">Unblock</button>
                       )}
@@ -1290,7 +1208,7 @@ const AdminDashboard: React.FC = () => {
                   {blockedSlots.map((bs) => (
                     <div key={bs._id} className="flex items-center justify-between p-2.5 sm:p-3 bg-white/5 rounded-lg">
                       <div className="min-w-0">
-                        <span className="text-xs sm:text-sm text-white">{bs.turfId === 'A' ? 'Arena 1' : bs.turfId === 'B' ? 'Arena 2' : bs.turfId === 'C' ? 'Bowling Machine' : 'Open Ground'} · {formatHour(bs.startHour)}</span>
+                        <span className="text-xs sm:text-sm text-white">{bs.turfId === 'A' ? 'Pickleball 1' : bs.turfId === 'B' ? 'Pickleball 2' : bs.turfId === 'C' ? 'Bowling Machine' : 'Box Cricket'} · {formatHour(bs.startHour)}</span>
                         {bs.reason && <span className="text-[10px] sm:text-xs text-surface-400 ml-2 truncate">{bs.reason}</span>}
                       </div>
                       <button onClick={() => handleUnblockSlot(bs.startHour, bs.date, bs.turfId)} className="text-[10px] sm:text-xs text-green-400 bg-green-500/15 px-2 py-1 rounded flex-shrink-0 ml-2">Unblock</button>
@@ -1321,9 +1239,9 @@ const AdminDashboard: React.FC = () => {
             {/* Activity Tabs */}
             <div className="flex flex-wrap gap-2 mb-4">
               {([
-                { id: 'A', label: 'Arena 1', color: 'primary' },
-                { id: 'B', label: 'Arena 2', color: 'accent' },
-                { id: 'D', label: 'Open Ground', color: 'amber' },
+                { id: 'A', label: 'Pickleball 1', color: 'primary' },
+                { id: 'B', label: 'Pickleball 2', color: 'accent' },
+                { id: 'D', label: 'Box Cricket', color: 'amber' },
                 { id: 'C', label: 'Bowling Machine', color: 'purple' },
               ] as { id: TurfId; label: string; color: string }[]).map(({ id, label, color }) => (
                 <button
@@ -1436,7 +1354,7 @@ const AdminDashboard: React.FC = () => {
                 )}
               </div>
             ) : (
-              /* ── Arena 1, Arena 2, Open Ground: time-slot pricing ── */
+              /* ── Pickleball 1, Pickleball 2, Box Cricket: time-slot pricing ── */
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {pricingRules.filter(rule => rule.turfId === selectedTurf).map((rule) => {
                   const accentCls =
@@ -1531,7 +1449,7 @@ const AdminDashboard: React.FC = () => {
           <div className="space-y-4">
             <div className="p-4 bg-primary-500/10 rounded-xl border border-primary-500/20">
               <p className="text-xs text-surface-400 font-bold uppercase tracking-widest">Selected Slot</p>
-              <p className="text-white font-black">{selectedTurf === 'A' ? 'Arena 1' : selectedTurf === 'B' ? 'Arena 2' : selectedTurf === 'C' ? 'Bowling Machine' : 'Open Ground'} · {formatDate(selectedDate)} · {selectedAdminSlots.map(h => formatHour(h)).join(', ')}</p>
+              <p className="text-white font-black">{selectedTurf === 'A' ? 'Pickleball 1' : selectedTurf === 'B' ? 'Pickleball 2' : selectedTurf === 'C' ? 'Bowling Machine' : 'Box Cricket'} · {formatDate(selectedDate)} · {selectedAdminSlots.map(h => formatHour(h)).join(', ')}</p>
             </div>
 
             {/* Info banner */}

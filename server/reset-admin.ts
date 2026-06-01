@@ -8,8 +8,8 @@ dotenv.config();
 import mongoose from 'mongoose';
 import { Admin } from './src/models/Admin';
 
-const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/vsy-box-cricket';
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@vsyboxcricket.com';
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/yodha-nets';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@yodhanets.com';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin@123';
 
 const run = async () => {
@@ -21,7 +21,7 @@ const run = async () => {
   console.log(`Deleted ${deleted.deletedCount} existing admin(s)`);
 
   await Admin.create({
-    name: 'VSY Admin',
+    name: 'Yodha Admin',
     email: ADMIN_EMAIL,
     password: ADMIN_PASSWORD,
   });

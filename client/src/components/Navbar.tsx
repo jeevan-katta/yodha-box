@@ -24,10 +24,10 @@ const Navbar: React.FC = () => {
           <Link to={role === 'admin' ? '/admin' : '/activities'} className="flex items-center gap-3 group">
             <div className="h-12 w-16 rounded-lg overflow-hidden bg-white/5 p-1
               group-hover:shadow-lg group-hover:shadow-primary-500/25 transition-all duration-300">
-              <img src="/images/logo.png" alt="VSY Logo" className="w-full h-full object-contain scale-110" />
+              <img src="/images/logo.png" alt="Yodha Nets Logo" className="w-full h-full object-contain scale-110" />
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="font-display font-bold text-lg text-white">VSY BOX CRICKET</span>
+              <span className="font-display font-bold text-lg text-white">YODHA NETS</span>
               <span className="text-[10px] uppercase tracking-widest text-primary-400 font-black">Premium Arena</span>
             </div>
           </Link>
@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
                   </div>
                 </Link>
                 <a
-                  href="https://www.google.com/maps/search/VSY+Box+Cricket+Nadergul"
+                  href="https://maps.app.goo.gl/BCCghi3hbdX2P5YZ9?g_st=ic"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-4 py-2 rounded-lg text-sm font-medium text-surface-400 hover:text-primary-400 hover:bg-white/5 transition-all duration-300"
@@ -107,7 +107,7 @@ const Navbar: React.FC = () => {
           <div className="md:hidden pb-4 animate-slide-down">
             <div className="flex flex-col gap-1">
               <div className="px-4 py-4 mb-2 flex flex-col items-center bg-white/5 rounded-xl border border-white/5">
-                <img src="/images/logo.png" alt="VSY Logo" className="h-16 w-24 object-contain" />
+                <img src="/images/logo.png" alt="Yodha Nets Logo" className="h-16 w-24 object-contain" />
               </div>
               {role === 'user' && (
                 <>
@@ -136,7 +136,7 @@ const Navbar: React.FC = () => {
                     </div>
                   </Link>
                   <a
-                    href="https://www.google.com/maps/search/VSY+Box+Cricket+Nadergul"
+                    href="https://maps.app.goo.gl/BCCghi3hbdX2P5YZ9?g_st=ic"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-3 rounded-lg text-sm font-medium text-surface-400 hover:text-primary-400 hover:bg-white/5"

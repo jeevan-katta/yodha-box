@@ -30,7 +30,7 @@ app.use('/api/', limiter);
 
 // Health check
 app.get('/api/health', (_req, res) => {
-  res.json({ success: true, message: 'VSY Box Cricket Pro API is running 🏏' });
+  res.json({ success: true, message: 'Yodha Nets API is running 🏏' });
 });
 
 // API Routes

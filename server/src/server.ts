@@ -12,7 +12,7 @@ const startServer = async (): Promise<void> => {
   await seedAdmin();
   app.listen(config.port, () => {
     console.log(`
-    🏏 VSY Box Cricket Pro Server
+    🔥 Yodha Nets Server
     📍 Running on port ${config.port}
     🌐 http://localhost:${config.port}
     📊 Health: http://localhost:${config.port}/api/health

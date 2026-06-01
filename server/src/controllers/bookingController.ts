@@ -48,7 +48,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
       const totalBookingAmount = bowlingPkg ? bowlingPkg.price : overs * 50; // fallback ₹50/over
 
       // Create Razorpay order
-      const bookingRef = `VSY-${turfId}-${Date.now().toString(36)}`;
+      const bookingRef = `YDH-${turfId}-${Date.now().toString(36)}`;
       const order = await createOrder(totalBookingAmount, bookingRef);
 
       // Create pending booking record
@@ -137,7 +137,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
 
     // Create Razorpay order for the amount to pay
     // Shorten bookingRef to stay under Razorpay's 40-char limit for receipt
-    const bookingRef = `VSY-${turfId}-${Date.now().toString(36)}`;
+    const bookingRef = `YDH-${turfId}-${Date.now().toString(36)}`;
     const order = await createOrder(amountToPay, bookingRef);
 
     // Create multiple pending bookings

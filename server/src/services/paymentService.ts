@@ -21,7 +21,7 @@ export const createOrder = async (
     receipt: bookingRef,
     notes: {
       bookingRef,
-      platform: 'VSY Box Cricket Pro',
+      platform: 'Yodha Nets',
     },
   };
 

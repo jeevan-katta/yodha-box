@@ -8,26 +8,15 @@ const ActivitiesPage: React.FC = () => {
 
   const activities = [
     {
-      id: 'arena1',
-      title: 'Premium Box',
-      subtitle: 'STARTS AT ₹700/HR',
-      badge: 'ARENA 1',
-      badgeColor: 'bg-primary-500/90 text-white',
-      image: '/images/box_6.jpg.PNG',
-      icon: <MdSportsCricket size={16} className="text-primary-400" />,
-      colorClass: 'from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 focus:ring-primary-500/30',
-      action: () => navigate('/dashboard', { state: { preselectedTurf: 'A' } })
-    },
-    {
-      id: 'arena2',
-      title: 'Championship Box',
+      id: 'ground',
+      title: 'Box Cricket',
       subtitle: 'STARTS AT ₹800/HR',
-      badge: 'ARENA 2',
-      badgeColor: 'bg-accent-500/90 text-white',
-      image: '/images/box_9.jpg.PNG',
-      icon: <MdSportsCricket size={16} className="text-accent-400" />,
-      colorClass: 'from-accent-600 to-accent-500 hover:from-accent-500 hover:to-accent-400 focus:ring-accent-500/30',
-      action: () => navigate('/dashboard', { state: { preselectedTurf: 'B' } })
+      badge: 'BOX CRICKET',
+      badgeColor: 'bg-emerald-600/90 text-white',
+      image: '/images/box_cricket.png',
+      icon: <MdSportsCricket size={16} className="text-emerald-400" />,
+      colorClass: 'from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 focus:ring-emerald-500/30',
+      action: () => navigate('/dashboard', { state: { preselectedTurf: 'D' } })
     },
     {
       id: 'bowling',
@@ -35,21 +24,32 @@ const ActivitiesPage: React.FC = () => {
       subtitle: 'STARTS AT ₹250 / 5 OVERS',
       badge: 'BOWLING NET',
       badgeColor: 'bg-purple-600/90 text-white',
-      image: '/images/box_10.jpg.PNG',
+      image: '/images/bowling_machine.png',
       icon: <MdMemory size={16} className="text-purple-400" />,
       colorClass: 'from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 focus:ring-purple-500/30',
       action: () => navigate('/dashboard/bowling')
     },
     {
-      id: 'ground',
-      title: 'Open Ground',
+      id: 'arena1',
+      title: 'Pickleball 1',
+      subtitle: 'STARTS AT ₹700/HR',
+      badge: 'PICKLEBALL 1',
+      badgeColor: 'bg-primary-500/90 text-white',
+      image: '/images/pickleball.png',
+      icon: <MdDirectionsRun size={16} className="text-primary-400" />,
+      colorClass: 'from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 focus:ring-primary-500/30',
+      action: () => navigate('/dashboard', { state: { preselectedTurf: 'A' } })
+    },
+    {
+      id: 'arena2',
+      title: 'Pickleball 2',
       subtitle: 'STARTS AT ₹800/HR',
-      badge: 'OPEN FIELD',
-      badgeColor: 'bg-emerald-600/90 text-white',
-      image: '/images/hero_turf.png',
-      icon: <MdDirectionsRun size={16} className="text-emerald-400" />,
-      colorClass: 'from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 focus:ring-emerald-500/30',
-      action: () => navigate('/dashboard', { state: { preselectedTurf: 'D' } })
+      badge: 'PICKLEBALL 2',
+      badgeColor: 'bg-accent-500/90 text-white',
+      image: '/images/pickleball.png',
+      icon: <MdDirectionsRun size={16} className="text-accent-400" />,
+      colorClass: 'from-accent-600 to-accent-500 hover:from-accent-500 hover:to-accent-400 focus:ring-accent-500/30',
+      action: () => navigate('/dashboard', { state: { preselectedTurf: 'B' } })
     }
   ];
 

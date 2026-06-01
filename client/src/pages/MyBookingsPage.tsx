@@ -157,7 +157,7 @@ const MyBookingsPage: React.FC = () => {
           <h1 className="text-3xl sm:text-4xl font-display font-black text-white">
             My <span className="gradient-text">Bookings</span>
           </h1>
-          <p className="text-surface-400 mt-2">View and manage your arena bookings</p>
+          <p className="text-surface-400 mt-2">View and manage your Yodha Nets bookings</p>
         </div>
 
         {/* Sleek Stats Section */}
@@ -244,7 +244,7 @@ const MyBookingsPage: React.FC = () => {
 
                 <div className="p-3 sm:px-5 sm:py-3.5">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                    {/* Left: Arena 2randing */}
+                    {/* Left: Activity Branding */}
                     <div className="flex items-center gap-3 flex-1">
                       <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 relative overflow-hidden ${
                         booking.turfId === 'A' ? 'bg-primary-500/10' : booking.turfId === 'B' ? 'bg-accent-500/10' : booking.turfId === 'C' ? 'bg-purple-500/10' : 'bg-emerald-500/10'
@@ -252,12 +252,12 @@ const MyBookingsPage: React.FC = () => {
                         {/* Decorative background icon */}
                         <span className={`absolute -right-1 -bottom-2 text-3xl font-black opacity-10 select-none ${
                         booking.turfId === 'A' ? 'text-primary-500' : booking.turfId === 'B' ? 'text-accent-500' : booking.turfId === 'C' ? 'text-purple-500' : 'text-emerald-500'
-                      }`}>{booking.turfId === 'A' ? 'A1' : booking.turfId === 'B' ? 'A2' : booking.turfId === 'C' ? 'BM' : 'OG'}</span>
+                      }`}>{booking.turfId === 'A' ? 'P1' : booking.turfId === 'B' ? 'P2' : booking.turfId === 'C' ? 'BM' : 'BC'}</span>
                         
                         <span className={`relative font-display font-black text-xs text-center leading-tight ${
                           booking.turfId === 'A' ? 'text-primary-400' : booking.turfId === 'B' ? 'text-accent-400' : booking.turfId === 'C' ? 'text-purple-400' : 'text-emerald-400'
                         }`}>
-                          {booking.turfId === 'A' ? <>{`Arena`}<br/>{`1`}</> : booking.turfId === 'B' ? <>{`Arena`}<br/>{`2`}</> : booking.turfId === 'C' ? 'Bowling' : <>{`Open`}<br/>{`Ground`}</>}
+                          {booking.turfId === 'A' ? <>{`Pickleball`}<br/>{`1`}</> : booking.turfId === 'B' ? <>{`Pickleball`}<br/>{`2`}</> : booking.turfId === 'C' ? 'Bowling' : <>{`Box`}<br/>{`Cricket`}</>}
                         </span>
                       </div>
 

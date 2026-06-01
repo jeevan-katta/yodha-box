@@ -2,17 +2,23 @@
 node_modules/
 dist/
 .env
+.env.production
+.env.*
 .DS_Store
 
 # Client ignores
 client/node_modules/
 client/dist/
 client/.env
+client/.env.production
+client/.env.*
 
 # Server ignores
 server/node_modules/
 server/dist/
 server/.env
+server/.env.production
+server/.env.*
 
 # Temporary scratch scripts
 *.js
